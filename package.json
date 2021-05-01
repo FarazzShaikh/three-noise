@@ -1,0 +1,21 @@
+{
+  "name": "three-noise",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "build": "rollup -c",
+    "test": "uvu tests"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "three": "^0.128.0"
+  },
+  "devDependencies": {
+    "rollup": "^2.46.0",
+    "uvu": "^0.5.1"
+  }
+}
