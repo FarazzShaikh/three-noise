@@ -11,7 +11,12 @@
     ·
     <a href="https://github.com/FarazzShaikh/three-noise/issues/new">Request Feature</a>
   </p>
+  <p align="center">
+    <a href="https://www.npmjs.com/package/three-noise"><img align="center" src="https://img.shields.io/npm/v/three-noise?color=cc3534&style=for-the-badge" /></a>
+  </p>
 </p>
+
+
 
 ## Installation
 
