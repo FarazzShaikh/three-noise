@@ -1,10 +1,17 @@
 import * as THREE from "three";
 
+/**
+ * An implimentation of Perlin Noise by Ken Perlin.
+ */
 export class Perlin {
   #seed = 0;
   #gradientVecs;
   #offsetMatrix;
 
+  /**
+   *
+   * @param {number} seed Seed Value for PRNG.
+   */
   constructor(seed) {
     this.#seed = seed;
     this.#gradientVecs = [
@@ -67,11 +74,25 @@ export class Perlin {
     return gradientVecIndex;
   }
 
+  /**
+   * Maps a number from one range to another.
+   * @param {number} x       Input Number
+   * @param {number} in_min  Current range minimum
+   * @param {number} in_max  Current range maximum
+   * @param {number} out_min New range minimum
+   * @param {number} out_max New range maximum
+   * @returns {number} Input Mapped to range [out_min, out_max]
+   */
   static map(x, in_min, in_max, out_min, out_max) {
     return ((x - in_min) * (out_max - out_min)) / (in_max - in_min) + out_min;
   }
 
-  perlin2(input) {
+  /**
+   * Samples 2D Perlin Nosie at given coordinates.
+   * @param {THREE.Vector2} input Coordincates to sample at
+   * @returns {number} Value of Perlin Noise at that coordinate.
+   */
+  get2(input) {
     if (!(input instanceof THREE.Vector2))
       throw "Input to Noise::perlin2() must be of type THREE.Vector2";
 
@@ -110,7 +131,12 @@ export class Perlin {
     return Perlin.map(value, -1, 1, 0, 1);
   }
 
-  perlin3(input) {
+  /**
+   * Samples 3D Perlin Nosie at given coordinates.
+   * @param {THREE.Vector}3 input Coordincates to sample at
+   * @returns {number} Value of Perlin Noise at that coordinate.
+   */
+  get3(input) {
     if (!(input instanceof THREE.Vector3))
       throw "Input to Noise::perlin3() must be of type THREE.Vector3";
 

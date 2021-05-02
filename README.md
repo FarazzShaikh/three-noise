@@ -5,7 +5,7 @@
   <p align="center">
     Simple gradient noise library for use with Three.js. Now with fBm!
     <br />
-    <a href="https://github.com/othneildrew/Best-README-Template">View Demo</a>
+    <a href="./example/index.html">View Demo</a>
     ·
     <a href="https://github.com/FarazzShaikh/three-noise/issues/new">Report Bug</a>
     ·

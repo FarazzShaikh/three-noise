@@ -1,6 +1,10 @@
 import * as THREE from "three";
 import { Perlin } from "./Perlin.js";
 
+/**
+ * This class is an implimentaiton of a Fractal Brownian Motion
+ * function using Perlin Nosie.
+ */
 export class FBM {
   #scale;
   #persistance;
@@ -8,14 +12,28 @@ export class FBM {
   #octaves;
   #redistribution;
   #noise;
-  constructor({
-    seed,
-    scale,
-    persistance,
-    lacunarity,
-    octaves,
-    redistribution,
-  }) {
+
+  /**
+   * Create an instance of the FBM class.
+   * Use this instance to generate fBm noise.
+   *
+   * @param {Object} options Options for fBm generaiton.
+   * @param {number} options.seed Seed for Perlin Noise
+   * @param {number} options.scale What distance to view the noisemap
+   * @param {number} options.persistance How much each octave contributes to the overall shape
+   * @param {number} options.lacunarity How much detail is added or removed at each octave
+   * @param {number} options.octaves Levels of detail you want you perlin noise to have
+   * @param {number} options.redistribution Level of flatness within the valleys
+   */
+  constructor(options) {
+    const {
+      seed,
+      scale,
+      persistance,
+      lacunarity,
+      octaves,
+      redistribution,
+    } = options;
     this.#noise = new Perlin(seed);
     this.#scale = scale ?? 1;
     this.#persistance = persistance ?? 0.5;
@@ -24,6 +42,14 @@ export class FBM {
     this.#redistribution = redistribution ?? 1;
   }
 
+  /**
+   * Sample 2D or 3D Perlin Noise with fBm at given
+   * coordinates. The function will use <code>Perlin#get2</code> or <code>Perlin#get3</code>
+   * depending on the input vector's type.
+   *
+   * @param {(THREE.Vector2 | THREE.Vector3)} input Coordinates to sample noise at.
+   * @returns {number} Normalized noise in the range [0, 1]
+   */
   get(input) {
     let result = 0;
     let amplitude = 1;
@@ -32,8 +58,8 @@ export class FBM {
 
     let noiseFunction =
       input instanceof THREE.Vector3
-        ? this.#noise.perlin3.bind(this.#noise)
-        : this.#noise.perlin2.bind(this.#noise);
+        ? this.#noise.get3.bind(this.#noise)
+        : this.#noise.get2.bind(this.#noise);
 
     for (let i = 0; i < this.#octaves; i++) {
       const position = new THREE.Vector2(
