@@ -9,7 +9,7 @@
     ·
     <a href="https://github.com/FarazzShaikh/three-noise/issues/new">Report Bug</a>
     ·
-    <a href="https://github.com/FarazzShaikh/three-noise/issues/new">Request Feature</a>
+    <a href="https://farazzshaikh.github.io/three-noise/index.html">API Docs</a>
   </p>
   <p align="center">
     <a href="https://www.npmjs.com/package/three-noise"><img align="center" src="https://img.shields.io/npm/v/three-noise?color=cc3534&style=for-the-badge" /></a>
