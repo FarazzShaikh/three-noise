@@ -42,7 +42,7 @@ In your HTML
 <script src="./main.js" defer></script>
 ```
 
-Then, in your javscript you can use the `THREE_Noise` object.
+Then, in your JavaScript you can use the `THREE_Noise` object.
 ```js
 const { Perlin, FBM } = THREE_Noise;
 ```
