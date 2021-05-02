@@ -11,23 +11,6 @@ const size = {
 const cubes = [];
 
 function genCubes(scene) {
-  //   for (let x = 0; x < size.w; x++) {
-  //     for (let y = 0; y < size.h; y++) {
-  //       for (let z = 0; z < size.l; z++) {
-  //         const geometry = new THREE.BoxGeometry(1, 1, 1);
-  //         const material = new THREE.MeshNormalMaterial();
-  //         const cube = new THREE.Mesh(geometry, material);
-
-  //         cube.position.x = x - size.w / 2;
-  //         cube.position.y = y - size.h / 2;
-  //         cube.position.z = z - size.l / 2;
-
-  //         cubes.push(cube);
-  //         scene.add(cube);
-  //       }
-  //     }
-  //   }
-
   for (let x = 0; x < size.w; x++) {
     for (let y = 0; y < size.h; y++) {
       const geometry = new THREE.BoxGeometry(1, 1, 1);
@@ -56,7 +39,7 @@ document.body.appendChild(renderer.domElement);
 
 const controls = new OrbitControls(camera, renderer.domElement);
 
-camera.position.set(0, 25, 0);
+camera.position.set(25, 25, 25);
 
 const gridHelper = new THREE.GridHelper(30, 20);
 scene.add(gridHelper);
@@ -80,31 +63,22 @@ const fbm = new FBM({
   height: 1,
 });
 
-cubes.forEach((cube, i) => {
-  const pos = new THREE.Vector2(i % size.w, i / size.w);
-  // const pos = new THREE.Vector3(
-  //   i % size.l,
-  //   (i / size.l) % size.h,
-  //   i / (size.h * size.l)
-  // );
-
-  // pos.multiplyScalar(scale);
-  pos.addScalar(1 / 10000);
-  const n = fbm.get(pos);
-
-  const c = Math.floor(n * 255);
-  cube.position.y = n * 10;
-
-  // if (n <= 0.5) cube.visible = false;
-  // else cube.visible = true;
-
-  cube.material.color = new THREE.Color(`rgb(${c}, ${c}, ${c})`);
-});
-
 const animate = function (dt) {
   requestAnimationFrame(animate);
   controls.update();
   renderer.render(scene, camera);
+
+  cubes.forEach((cube, i) => {
+    const pos = new THREE.Vector2(i % size.w, i / size.w);
+
+    pos.addScalar(1 / 10000);
+    pos.addScalar(dt / 1000);
+    const n = fbm.get(pos);
+
+    const c = Math.floor(n * 255);
+    cube.position.y = n * 10;
+    cube.material.color = new THREE.Color(`rgb(${c}, ${c}, ${c})`);
+  });
 };
 
 animate();
