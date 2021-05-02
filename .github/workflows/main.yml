@@ -7,7 +7,7 @@ jobs:
       - name: Checkout 🛎️
         uses: actions/checkout@v2.3.1
 
-      - name: Install and Build 
+      - name: Install and Build
         run: |
           npm install
           mkdir docs
@@ -16,5 +16,10 @@ jobs:
       - name: Deploy 🚀
         uses: JamesIves/github-pages-deploy-action@4.1.1
         with:
-          branch: gh-pages 
-          folder: docs 
+          branch: gh-pages
+          folder: docs
+
+      - name: Publish 📖
+        uses: JS-DevTools/npm-publish@v1
+        with:
+          token: ${{ secrets.NPM_TOKEN }}

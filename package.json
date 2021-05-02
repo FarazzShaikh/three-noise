@@ -1,7 +1,7 @@
 {
   "name": "three-noise",
   "version": "1.0.0",
-  "description": "",
+  "description": "Simple gradient noise library for use with Three.js. Now with fBm!",
   "main": "index.js",
   "type": "module",
   "files": [
@@ -14,9 +14,9 @@
     "test": "uvu tests",
     "doc": "jsdoc --configure jsdoc.json --verbose && chmod +x scripts/doc.sh && scripts/doc.sh"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "keywords": ["threejs", "3d", "2d", "noise", "perlin", "perlin noise", "fbm", "terrain", "mountains"],
+  "author": "Faraz Shaikh",
+  "license": "MIT",
   "dependencies": {
     "three": "^0.128.0"
   },
