@@ -23,4 +23,9 @@ else
     sed -i "${lineNum}s/$match/$replace/" docs/index.html
 fi
 
-cp -R example docs/example
+cp -R example docs
+
+mkdir docs/node_modules
+mkdir docs/node_modules/three
+mkdir docs/node_modules/three/build
+cp node_modules/three/build/three.module.js docs/node_modules/three/build/three.module.js
