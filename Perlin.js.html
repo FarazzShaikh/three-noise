@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Perlin.js - Documentation</title>
+
+    <script src="scripts/prettify/prettify.js"></script>
+    <script src="scripts/prettify/lang-css.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+    <script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+
+    <link type="text/css" rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+<body>
+
+<input type="checkbox" id="nav-trigger" class="nav-trigger" />
+<label for="nav-trigger" class="navicon-button x">
+  <div class="navicon"></div>
+</label>
+
+<label for="nav-trigger" class="overlay"></label>
+
+<nav class="nav">
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="FBM.html">FBM</a><ul class='methods'><li data-type='method'><a href="FBM.html#get">get</a></li></ul></li><li><a href="Perlin.html">Perlin</a><ul class='methods'><li data-type='method'><a href="Perlin.html#.map">map</a></li><li data-type='method'><a href="Perlin.html#get2">get2</a></li><li data-type='method'><a href="Perlin.html#get3">get3</a></li></ul></li></ul>
+</nav>
+
+<div id="main">
+    
+    <h1 class="page-title">Perlin.js</h1>
+    
+
+    <!--container.tmpl-->
+
+
+
+
+    <!--source.tmpl-->
+
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>import * as THREE from "three";
+
+/**
+ * An implimentation of Perlin Noise by Ken Perlin.
+ */
+export class Perlin {
+  #seed = 0;
+  #gradientVecs;
+  #offsetMatrix;
+
+  /**
+   *
+   * @param {number} seed Seed Value for PRNG.
+   */
+  constructor(seed) {
+    this.#seed = seed;
+    this.#gradientVecs = [
+      // 2D Vecs
+      new THREE.Vector3(1, 1, 0),
+      new THREE.Vector3(-1, 1, 0),
+      new THREE.Vector3(1, -1, 0),
+      new THREE.Vector3(-1, -1, 0),
+      // + 3D Vecs
+      new THREE.Vector3(1, 0, 1),
+      new THREE.Vector3(-1, 0, 1),
+      new THREE.Vector3(1, 0, -1),
+      new THREE.Vector3(-1, 0, -1),
+      new THREE.Vector3(0, 1, 1),
+      new THREE.Vector3(0, -1, 1),
+      new THREE.Vector3(0, 1, -1),
+      new THREE.Vector3(0, -1, -1),
+    ];
+    this.#offsetMatrix = [
+      // 2D Vecs
+      new THREE.Vector3(0, 0, 0),
+      new THREE.Vector3(0, 1, 0),
+      new THREE.Vector3(1, 0, 0),
+      new THREE.Vector3(1, 1, 0),
+      // + 3D Vecs
+      new THREE.Vector3(0, 0, 1),
+      new THREE.Vector3(0, 1, 1),
+      new THREE.Vector3(1, 0, 1),
+      new THREE.Vector3(1, 1, 1),
+    ];
+  }
+
+  #fade(t) {
+    return t * t * t * (t * (t * 6 - 15) + 10);
+  }
+
+  #lerp(a, b, t) {
+    return (1 - t) * a + t * b;
+  }
+
+  #hash(a) {
+    a = a ^ 61 ^ (a >> 16);
+    a = a + (a &lt;&lt; 3);
+    a = a ^ (a >> 4);
+    a = a * 0x27d4eb2d;
+    a = a ^ (a >> 15);
+    return a;
+  }
+
+  #gradient(posInCell) {
+    let gradientVecIndex;
+
+    const x = this.#hash(this.#seed + posInCell.x);
+    const y = this.#hash(this.#seed + x + posInCell.y);
+
+    if (posInCell instanceof THREE.Vector3)
+      gradientVecIndex = this.#hash(this.#seed + y + posInCell.z) % 12;
+    else gradientVecIndex = y % 4;
+
+    return gradientVecIndex;
+  }
+
+  /**
+   * Maps a number from one range to another.
+   * @param {number} x       Input Number
+   * @param {number} in_min  Current range minimum
+   * @param {number} in_max  Current range maximum
+   * @param {number} out_min New range minimum
+   * @param {number} out_max New range maximum
+   * @returns {number} Input Mapped to range [out_min, out_max]
+   */
+  static map(x, in_min, in_max, out_min, out_max) {
+    return ((x - in_min) * (out_max - out_min)) / (in_max - in_min) + out_min;
+  }
+
+  /**
+   * Samples 2D Perlin Nosie at given coordinates.
+   * @param {THREE.Vector2} input Coordincates to sample at
+   * @returns {number} Value of Perlin Noise at that coordinate.
+   */
+  get2(input) {
+    if (!(input instanceof THREE.Vector2))
+      throw "Input to Noise::perlin2() must be of type THREE.Vector2";
+
+    const cell = new THREE.Vector2(Math.floor(input.x), Math.floor(input.y));
+    const posInCell = input.sub(cell);
+
+    // Wrap the integer cells at 255 (smaller integer period can be introduced here)
+    cell.x &amp;= 255;
+    cell.y &amp;= 255;
+
+    const gradiantDot = [];
+    for (let i = 0; i &lt; 4; i++) {
+      const s3 = this.#offsetMatrix[i];
+      const s = new THREE.Vector2(s3.x, s3.y);
+
+      const grad3 = this.#gradientVecs[
+        this.#gradient(new THREE.Vector2(0, 0).addVectors(cell, s))
+      ];
+      const grad2 = new THREE.Vector2(grad3.x, grad3.y);
+      const dist2 = new THREE.Vector2(0, 0).subVectors(posInCell, s);
+
+      gradiantDot.push(grad2.dot(dist2));
+    }
+
+    // Compute the this.fade curve value for x, y, z
+    const u = this.#fade(posInCell.x);
+    const v = this.#fade(posInCell.y);
+
+    const value = this.#lerp(
+      this.#lerp(gradiantDot[0], gradiantDot[2], u),
+      this.#lerp(gradiantDot[1], gradiantDot[3], u),
+      v
+    );
+
+    // Interpolate
+    return Perlin.map(value, -1, 1, 0, 1);
+  }
+
+  /**
+   * Samples 3D Perlin Nosie at given coordinates.
+   * @param {THREE.Vector}3 input Coordincates to sample at
+   * @returns {number} Value of Perlin Noise at that coordinate.
+   */
+  get3(input) {
+    if (!(input instanceof THREE.Vector3))
+      throw "Input to Noise::perlin3() must be of type THREE.Vector3";
+
+    const cell = new THREE.Vector3(
+      Math.floor(input.x),
+      Math.floor(input.y),
+      Math.floor(input.z)
+    );
+    const posInCell = input.sub(cell);
+
+    // Wrap the integer cells at 255 (smaller integer period can be introduced here)
+    cell.x &amp;= 255;
+    cell.y &amp;= 255;
+    cell.z &amp;= 255;
+
+    const gradiantDot = [];
+    for (let i = 0; i &lt; 8; i++) {
+      const s = this.#offsetMatrix[i];
+
+      const grad3 = this.#gradientVecs[
+        this.#gradient(new THREE.Vector3(0, 0, 0).addVectors(cell, s))
+      ];
+      const dist2 = new THREE.Vector3(0, 0, 0).subVectors(posInCell, s);
+
+      gradiantDot.push(grad3.dot(dist2));
+    }
+
+    // Compute the this.fade curve value for x, y, z
+    const u = this.#fade(posInCell.x);
+    const v = this.#fade(posInCell.y);
+    const w = this.#fade(posInCell.z);
+
+    const value = this.#lerp(
+      this.#lerp(
+        this.#lerp(gradiantDot[0], gradiantDot[4], u),
+        this.#lerp(gradiantDot[1], gradiantDot[5], u),
+        w
+      ),
+      this.#lerp(
+        this.#lerp(gradiantDot[2], gradiantDot[6], u),
+        this.#lerp(gradiantDot[3], gradiantDot[7], u),
+        w
+      ),
+      v
+    );
+
+    // Interpolate
+    return Perlin.map(value, -1, 1, 0, 1);
+  }
+}
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+
+</div>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.6</a> on Sun May 02 2021 10:40:40 GMT+0000 (Coordinated Universal Time) using the LOKE theme.
+</footer>
+
+<script>prettyPrint();</script>
+<script src="scripts/linenumber.js"></script>
+</body>
+</html>
