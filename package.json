@@ -4,6 +4,11 @@
   "description": "",
   "main": "index.js",
   "type": "module",
+  "files": [
+    "build/three-noise.module.js",
+    "README.md",
+    "package.json"
+  ],
   "scripts": {
     "build": "rollup -c",
     "test": "uvu tests"
@@ -15,6 +20,7 @@
     "three": "^0.128.0"
   },
   "devDependencies": {
+    "jsdoc": "^3.6.6",
     "rollup": "^2.46.0",
     "uvu": "^0.5.1"
   }
