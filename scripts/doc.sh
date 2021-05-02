@@ -25,7 +25,11 @@ fi
 
 cp -R example docs
 
+
 mkdir docs/node_modules
 mkdir docs/node_modules/three
 mkdir docs/node_modules/three/build
-cp node_modules/three/build/three.module.js docs/node_modules/three/build/three.module.js
+cp node_modules/three/build/three.js docs/node_modules/three/build/three.js
+
+mkdir docs/build
+cp build/three-noise.js docs/build/three-noise.js
