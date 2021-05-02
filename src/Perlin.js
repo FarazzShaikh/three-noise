@@ -4,17 +4,17 @@ import * as THREE from "three";
  * An implimentation of Perlin Noise by Ken Perlin.
  */
 export class Perlin {
-  #seed = 0;
-  #gradientVecs;
-  #offsetMatrix;
+  _seed = 0;
+  _gradientVecs;
+  _offsetMatrix;
 
   /**
    *
    * @param {number} seed Seed Value for PRNG.
    */
   constructor(seed) {
-    this.#seed = seed;
-    this.#gradientVecs = [
+    this._seed = seed;
+    this._gradientVecs = [
       // 2D Vecs
       new THREE.Vector3(1, 1, 0),
       new THREE.Vector3(-1, 1, 0),
@@ -30,7 +30,7 @@ export class Perlin {
       new THREE.Vector3(0, 1, -1),
       new THREE.Vector3(0, -1, -1),
     ];
-    this.#offsetMatrix = [
+    this._offsetMatrix = [
       // 2D Vecs
       new THREE.Vector3(0, 0, 0),
       new THREE.Vector3(0, 1, 0),
@@ -44,15 +44,15 @@ export class Perlin {
     ];
   }
 
-  #fade(t) {
+  _fade(t) {
     return t * t * t * (t * (t * 6 - 15) + 10);
   }
 
-  #lerp(a, b, t) {
+  _lerp(a, b, t) {
     return (1 - t) * a + t * b;
   }
 
-  #hash(a) {
+  _hash(a) {
     a = a ^ 61 ^ (a >> 16);
     a = a + (a << 3);
     a = a ^ (a >> 4);
@@ -61,14 +61,14 @@ export class Perlin {
     return a;
   }
 
-  #gradient(posInCell) {
+  _gradient(posInCell) {
     let gradientVecIndex;
 
-    const x = this.#hash(this.#seed + posInCell.x);
-    const y = this.#hash(this.#seed + x + posInCell.y);
+    const x = this._hash(this._seed + posInCell.x);
+    const y = this._hash(this._seed + x + posInCell.y);
 
     if (posInCell instanceof THREE.Vector3)
-      gradientVecIndex = this.#hash(this.#seed + y + posInCell.z) % 12;
+      gradientVecIndex = this._hash(this._seed + y + posInCell.z) % 12;
     else gradientVecIndex = y % 4;
 
     return gradientVecIndex;
@@ -105,11 +105,11 @@ export class Perlin {
 
     const gradiantDot = [];
     for (let i = 0; i < 4; i++) {
-      const s3 = this.#offsetMatrix[i];
+      const s3 = this._offsetMatrix[i];
       const s = new THREE.Vector2(s3.x, s3.y);
 
-      const grad3 = this.#gradientVecs[
-        this.#gradient(new THREE.Vector2(0, 0).addVectors(cell, s))
+      const grad3 = this._gradientVecs[
+        this._gradient(new THREE.Vector2(0, 0).addVectors(cell, s))
       ];
       const grad2 = new THREE.Vector2(grad3.x, grad3.y);
       const dist2 = new THREE.Vector2(0, 0).subVectors(posInCell, s);
@@ -118,12 +118,12 @@ export class Perlin {
     }
 
     // Compute the this.fade curve value for x, y, z
-    const u = this.#fade(posInCell.x);
-    const v = this.#fade(posInCell.y);
+    const u = this._fade(posInCell.x);
+    const v = this._fade(posInCell.y);
 
-    const value = this.#lerp(
-      this.#lerp(gradiantDot[0], gradiantDot[2], u),
-      this.#lerp(gradiantDot[1], gradiantDot[3], u),
+    const value = this._lerp(
+      this._lerp(gradiantDot[0], gradiantDot[2], u),
+      this._lerp(gradiantDot[1], gradiantDot[3], u),
       v
     );
 
@@ -154,10 +154,10 @@ export class Perlin {
 
     const gradiantDot = [];
     for (let i = 0; i < 8; i++) {
-      const s = this.#offsetMatrix[i];
+      const s = this._offsetMatrix[i];
 
-      const grad3 = this.#gradientVecs[
-        this.#gradient(new THREE.Vector3(0, 0, 0).addVectors(cell, s))
+      const grad3 = this._gradientVecs[
+        this._gradient(new THREE.Vector3(0, 0, 0).addVectors(cell, s))
       ];
       const dist2 = new THREE.Vector3(0, 0, 0).subVectors(posInCell, s);
 
@@ -165,19 +165,19 @@ export class Perlin {
     }
 
     // Compute the this.fade curve value for x, y, z
-    const u = this.#fade(posInCell.x);
-    const v = this.#fade(posInCell.y);
-    const w = this.#fade(posInCell.z);
+    const u = this._fade(posInCell.x);
+    const v = this._fade(posInCell.y);
+    const w = this._fade(posInCell.z);
 
-    const value = this.#lerp(
-      this.#lerp(
-        this.#lerp(gradiantDot[0], gradiantDot[4], u),
-        this.#lerp(gradiantDot[1], gradiantDot[5], u),
+    const value = this._lerp(
+      this._lerp(
+        this._lerp(gradiantDot[0], gradiantDot[4], u),
+        this._lerp(gradiantDot[1], gradiantDot[5], u),
         w
       ),
-      this.#lerp(
-        this.#lerp(gradiantDot[2], gradiantDot[6], u),
-        this.#lerp(gradiantDot[3], gradiantDot[7], u),
+      this._lerp(
+        this._lerp(gradiantDot[2], gradiantDot[6], u),
+        this._lerp(gradiantDot[3], gradiantDot[7], u),
         w
       ),
       v

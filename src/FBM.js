@@ -6,12 +6,12 @@ import { Perlin } from "./Perlin.js";
  * function using Perlin Nosie.
  */
 export class FBM {
-  #scale;
-  #persistance;
-  #lacunarity;
-  #octaves;
-  #redistribution;
-  #noise;
+  _scale;
+  _persistance;
+  _lacunarity;
+  _octaves;
+  _redistribution;
+  _noise;
 
   /**
    * Create an instance of the FBM class.
@@ -34,17 +34,17 @@ export class FBM {
       octaves,
       redistribution,
     } = options;
-    this.#noise = new Perlin(seed);
-    this.#scale = scale ?? 1;
-    this.#persistance = persistance ?? 0.5;
-    this.#lacunarity = lacunarity ?? 2;
-    this.#octaves = octaves ?? 6;
-    this.#redistribution = redistribution ?? 1;
+    this._noise = new Perlin(seed);
+    this._scale = scale ?? 1;
+    this._persistance = persistance ?? 0.5;
+    this._lacunarity = lacunarity ?? 2;
+    this._octaves = octaves ?? 6;
+    this._redistribution = redistribution ?? 1;
   }
 
   /**
    * Sample 2D or 3D Perlin Noise with fBm at given
-   * coordinates. The function will use <code>Perlin#get2</code> or <code>Perlin#get3</code>
+   * coordinates. The function will use <code>Perlin_get2</code> or <code>Perlin_get3</code>
    * depending on the input vector's type.
    *
    * @param {(THREE.Vector2 | THREE.Vector3)} input Coordinates to sample noise at.
@@ -58,24 +58,24 @@ export class FBM {
 
     let noiseFunction =
       input instanceof THREE.Vector3
-        ? this.#noise.get3.bind(this.#noise)
-        : this.#noise.get2.bind(this.#noise);
+        ? this._noise.get3.bind(this._noise)
+        : this._noise.get2.bind(this._noise);
 
-    for (let i = 0; i < this.#octaves; i++) {
+    for (let i = 0; i < this._octaves; i++) {
       const position = new THREE.Vector2(
-        input.x * this.#scale * frequency,
-        input.y * this.#scale * frequency
+        input.x * this._scale * frequency,
+        input.y * this._scale * frequency
       );
 
       const noiseVal = noiseFunction(position) * 2 - 1;
       result += noiseVal * amplitude;
 
-      frequency *= this.#lacunarity;
-      amplitude *= this.#persistance;
+      frequency *= this._lacunarity;
+      amplitude *= this._persistance;
       max += amplitude;
     }
 
-    const redistributed = Math.pow(result, this.#redistribution);
+    const redistributed = Math.pow(result, this._redistribution);
     return redistributed / max + 0.5;
   }
 }
