@@ -2,13 +2,14 @@
   "name": "three-noise",
   "version": "1.0.0",
   "description": "Simple gradient noise library for use with Three.js. Now with fBm!",
-  "main": "index.js",
+  "main": "build/three-noise.module.js",
   "type": "module",
   "files": [
     "build/three-noise.module.js",
     "README.md",
     "package.json"
   ],
+  "repository": "https://github.com/FarazzShaikh/three-noise",
   "scripts": {
     "build": "rollup -c",
     "test": "uvu tests",
