@@ -25,10 +25,10 @@ jobs:
         if: ${{ env.deployment_status == 'success' }}
         with:
           token: ${{ secrets.NPM_TOKEN }}
-          
+
       - name: Release 🚀
         uses: softprops/action-gh-release@v1
-        if: ${{ steps.publish.outputs.type == 'none' }}
+        if: ${{ steps.publish.outputs.type != 'none' }}
         with:
           files: src/*
           tag_name: ${{steps.publish.outputs.version}}
