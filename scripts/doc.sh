@@ -25,5 +25,5 @@ fi
 
 cp -R example docs
 
-mkdir docs/build
+mkdir -p docs/build
 cp build/three-noise.js docs/build/three-noise.js

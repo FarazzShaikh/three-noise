@@ -1,4 +1,5 @@
 import * as THREE from "three";
+import header from "./shaders/header.js";
 
 /**
  * An implimentation of Perlin Noise by Ken Perlin.
@@ -7,6 +8,13 @@ export class Perlin {
   _seed = 0;
   _gradientVecs;
   _offsetMatrix;
+
+  /**
+   * GLSL Shader Chunk for 2D Perlin Noise. Can be used with
+   * three-CustomShaderMaterial.
+   * See: <a href="https://github.com/FarazzShaikh/THREE-CustomShaderMaterial">three-CustomShaderMaterial</a>
+   */
+  shaderChunk;
 
   /**
    *
@@ -42,6 +50,13 @@ export class Perlin {
       new THREE.Vector3(1, 0, 1),
       new THREE.Vector3(1, 1, 1),
     ];
+
+    this.shaderChunk = {
+      defines: "",
+      header: header,
+      main: "",
+      uniforms: [{ three_noise_seed: this._seed }],
+    };
   }
 
   _fade(t) {
