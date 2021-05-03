@@ -31,6 +31,6 @@ jobs:
 #         if: steps.publish.outputs.type != 'none'
         with:
           files: src/*
-          tag_name: steps.publish.outputs.version
+          tag_name: ${{steps.publish.outputs.version}}
         env:
           GITHUB_TOKEN: ${{ secrets.RELEASE_TOKEN }}
