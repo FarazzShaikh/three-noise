@@ -62,7 +62,9 @@
         <h5>Members</h5>
         <br />
         <dl class="dl-horizontal methods-members">
-        <dt>Methods</dt><dd><ul>
+        <dt>Fields &amp; Properties</dt><dd><ul>
+            <li><a href="#shaderChunk">shaderChunk</a></li>
+            </ul></dd><dt>Methods</dt><dd><ul>
             <li><a href="#map">map</a></li>
             
             <li><a href="#get2">get2</a></li>
@@ -92,7 +94,7 @@
 <div class="pull-right source-link-container">
   <code class="source-link" data-tmpl="method-tmpl(1)">
     <i class="fa fa-file-o"></i>
-    <a href="Perlin.js.html">Perlin.js</a>:<a href="Perlin.js.html#line6">6</a>
+    <a href="Perlin.js.html">Perlin.js</a>:<a href="Perlin.js.html#line7">7</a>
   </code>
 </div>
 
@@ -247,7 +249,7 @@
 
 <!--
 <pre>
-{"comment":"/**\n * An implimentation of Perlin Noise by Ken Perlin.\n */","meta":{"range":[93,5129],"filename":"Perlin.js","lineno":6,"columnno":0,"path":"/home/runner/work/three-noise/three-noise/src","code":{"id":"astnode100000234","name":"exports.Perlin","type":"ClassDeclaration"},"shortpath":"Perlin.js"},"name":"Perlin","longname":"Perlin","kind":"class","classdesc":"<p>An implimentation of Perlin Noise by Ken Perlin.</p>","scope":"global","memberof":"Perlin","params":[{"type":{"names":["number"]},"description":"<p>Seed Value for PRNG.</p>","name":"seed"}],"___id":"T000003R000003","___s":true,"attribs":"<span class=\"type-signature\"></span>","id":"Perlin","signature":"<span class=\"signature\">(seed)</span><span class=\"type-signature\"></span>","ancestors":[]}
+{"comment":"/**\n * An implimentation of Perlin Noise by Ken Perlin.\n */","meta":{"range":[135,5545],"filename":"Perlin.js","lineno":7,"columnno":0,"path":"/home/runner/work/three-noise/three-noise/src","code":{"id":"astnode100000238","name":"exports.Perlin","type":"ClassDeclaration"},"shortpath":"Perlin.js"},"name":"Perlin","longname":"Perlin","kind":"class","classdesc":"<p>An implimentation of Perlin Noise by Ken Perlin.</p>","scope":"global","memberof":"Perlin","params":[{"type":{"names":["number"]},"description":"<p>Seed Value for PRNG.</p>","name":"seed"}],"___id":"T000003R000003","___s":true,"attribs":"<span class=\"type-signature\"></span>","id":"Perlin","signature":"<span class=\"signature\">(seed)</span><span class=\"type-signature\"></span>","ancestors":[]}
 </pre>
 -->
 </div>
@@ -273,6 +275,95 @@
     
 
     
+        <h3 class="subsection-title">Members</h3>
+
+        
+            <!--members.tmpl-->
+<div class="member-details">
+
+
+
+
+  <!--source-link.tmpl-->
+
+
+<div class="pull-right source-link-container">
+  <code class="source-link" data-tmpl="method-tmpl(1)">
+    <i class="fa fa-file-o"></i>
+    <a href="Perlin.js.html">Perlin.js</a>:<a href="Perlin.js.html#line17">17</a>
+  </code>
+</div>
+
+
+
+<h4 class="name" id="shaderChunk">
+  <span class="type-signature"></span>shaderChunk<span class="type-signature"></span>
+</h4>
+
+
+
+
+<div class="description">
+    <p>GLSL Shader Chunk for 2D Perlin Noise. Can be used with
+three-CustomShaderMaterial.
+See: <a href="https://github.com/FarazzShaikh/THREE-CustomShaderMaterial">three-CustomShaderMaterial</a></p>
+</div>
+
+
+<div>
+
+<!-- details.tmpl -->
+
+
+
+
+
+
+
+
+<dl class="dl-horizontal">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+</div>
+
+</div>
+
+        
+    
 
     
         <h3 class="subsection-title">Methods</h3>
@@ -289,7 +380,7 @@
 <div class="pull-right source-link-container">
   <code class="source-link" data-tmpl="method-tmpl(1)">
     <i class="fa fa-file-o"></i>
-    <a href="Perlin.js.html">Perlin.js</a>:<a href="Perlin.js.html#line86">86</a>
+    <a href="Perlin.js.html">Perlin.js</a>:<a href="Perlin.js.html#line101">101</a>
   </code>
 </div>
 
@@ -570,7 +661,7 @@
 
 <!--
 <pre>
-{"comment":"/**\n   * Maps a number from one range to another.\n   * @param {number} x       Input Number\n   * @param {number} in_min  Current range minimum\n   * @param {number} in_max  Current range maximum\n   * @param {number} out_min New range minimum\n   * @param {number} out_max New range maximum\n   * @returns {number} Input Mapped to range [out_min, out_max]\n   */","meta":{"range":[2091,2223],"filename":"Perlin.js","lineno":86,"columnno":2,"path":"/home/runner/work/three-noise/three-noise/src","code":{"id":"astnode100000572","name":"Perlin.map","type":"MethodDefinition","paramnames":["x","in_min","in_max","out_min","out_max"]},"vars":{"":null},"shortpath":"Perlin.js"},"description":"<p>Maps a number from one range to another.</p>","params":[{"type":{"names":["number"]},"description":"<p>Input Number</p>","name":"x"},{"type":{"names":["number"]},"description":"<p>Current range minimum</p>","name":"in_min"},{"type":{"names":["number"]},"description":"<p>Current range maximum</p>","name":"in_max"},{"type":{"names":["number"]},"description":"<p>New range minimum</p>","name":"out_min"},{"type":{"names":["number"]},"description":"<p>New range maximum</p>","name":"out_max"}],"returns":[{"type":{"names":["number"]},"description":"<p>Input Mapped to range [out_min, out_max]</p>"}],"name":"map","longname":"Perlin.map","kind":"function","memberof":"Perlin","scope":"static","___id":"T000002R000062","___s":true,"attribs":"<span class=\"type-signature\">(static) </span>","id":".map","signature":"<span class=\"signature\">(x, in_min, in_max, out_min, out_max)</span><span class=\"type-signature\"> &rarr; {number}</span>","ancestors":["<a href=\"Perlin.html\">Perlin</a>."]}
+{"comment":"/**\n   * Maps a number from one range to another.\n   * @param {number} x       Input Number\n   * @param {number} in_min  Current range minimum\n   * @param {number} in_max  Current range maximum\n   * @param {number} out_min New range minimum\n   * @param {number} out_max New range maximum\n   * @returns {number} Input Mapped to range [out_min, out_max]\n   */","meta":{"range":[2507,2639],"filename":"Perlin.js","lineno":101,"columnno":2,"path":"/home/runner/work/three-noise/three-noise/src","code":{"id":"astnode100000596","name":"Perlin.map","type":"MethodDefinition","paramnames":["x","in_min","in_max","out_min","out_max"]},"vars":{"":null},"shortpath":"Perlin.js"},"description":"<p>Maps a number from one range to another.</p>","params":[{"type":{"names":["number"]},"description":"<p>Input Number</p>","name":"x"},{"type":{"names":["number"]},"description":"<p>Current range minimum</p>","name":"in_min"},{"type":{"names":["number"]},"description":"<p>Current range maximum</p>","name":"in_max"},{"type":{"names":["number"]},"description":"<p>New range minimum</p>","name":"out_min"},{"type":{"names":["number"]},"description":"<p>New range maximum</p>","name":"out_max"}],"returns":[{"type":{"names":["number"]},"description":"<p>Input Mapped to range [out_min, out_max]</p>"}],"name":"map","longname":"Perlin.map","kind":"function","memberof":"Perlin","scope":"static","___id":"T000002R000069","___s":true,"attribs":"<span class=\"type-signature\">(static) </span>","id":".map","signature":"<span class=\"signature\">(x, in_min, in_max, out_min, out_max)</span><span class=\"type-signature\"> &rarr; {number}</span>","ancestors":["<a href=\"Perlin.html\">Perlin</a>."]}
 </pre>
 -->
 </div>
@@ -587,7 +678,7 @@
 <div class="pull-right source-link-container">
   <code class="source-link" data-tmpl="method-tmpl(1)">
     <i class="fa fa-file-o"></i>
-    <a href="Perlin.js.html">Perlin.js</a>:<a href="Perlin.js.html#line95">95</a>
+    <a href="Perlin.js.html">Perlin.js</a>:<a href="Perlin.js.html#line110">110</a>
   </code>
 </div>
 
@@ -776,7 +867,7 @@
 
 <!--
 <pre>
-{"comment":"/**\n   * Samples 2D Perlin Nosie at given coordinates.\n   * @param {THREE.Vector2} input Coordincates to sample at\n   * @returns {number} Value of Perlin Noise at that coordinate.\n   */","meta":{"range":[2415,3579],"filename":"Perlin.js","lineno":95,"columnno":2,"path":"/home/runner/work/three-noise/three-noise/src","code":{"id":"astnode100000595","name":"Perlin#get2","type":"MethodDefinition","paramnames":["input"]},"vars":{"":null},"shortpath":"Perlin.js"},"description":"<p>Samples 2D Perlin Nosie at given coordinates.</p>","params":[{"type":{"names":["THREE.Vector2"]},"description":"<p>Coordincates to sample at</p>","name":"input"}],"returns":[{"type":{"names":["number"]},"description":"<p>Value of Perlin Noise at that coordinate.</p>"}],"name":"get2","longname":"Perlin#get2","kind":"function","memberof":"Perlin","scope":"instance","___id":"T000002R000063","___s":true,"attribs":"<span class=\"type-signature\"></span>","id":"get2","signature":"<span class=\"signature\">(input)</span><span class=\"type-signature\"> &rarr; {number}</span>","ancestors":["<a href=\"Perlin.html\">Perlin</a>#"]}
+{"comment":"/**\n   * Samples 2D Perlin Nosie at given coordinates.\n   * @param {THREE.Vector2} input Coordincates to sample at\n   * @returns {number} Value of Perlin Noise at that coordinate.\n   */","meta":{"range":[2831,3995],"filename":"Perlin.js","lineno":110,"columnno":2,"path":"/home/runner/work/three-noise/three-noise/src","code":{"id":"astnode100000619","name":"Perlin#get2","type":"MethodDefinition","paramnames":["input"]},"vars":{"":null},"shortpath":"Perlin.js"},"description":"<p>Samples 2D Perlin Nosie at given coordinates.</p>","params":[{"type":{"names":["THREE.Vector2"]},"description":"<p>Coordincates to sample at</p>","name":"input"}],"returns":[{"type":{"names":["number"]},"description":"<p>Value of Perlin Noise at that coordinate.</p>"}],"name":"get2","longname":"Perlin#get2","kind":"function","memberof":"Perlin","scope":"instance","___id":"T000002R000070","___s":true,"attribs":"<span class=\"type-signature\"></span>","id":"get2","signature":"<span class=\"signature\">(input)</span><span class=\"type-signature\"> &rarr; {number}</span>","ancestors":["<a href=\"Perlin.html\">Perlin</a>#"]}
 </pre>
 -->
 </div>
@@ -793,7 +884,7 @@
 <div class="pull-right source-link-container">
   <code class="source-link" data-tmpl="method-tmpl(1)">
     <i class="fa fa-file-o"></i>
-    <a href="Perlin.js.html">Perlin.js</a>:<a href="Perlin.js.html#line139">139</a>
+    <a href="Perlin.js.html">Perlin.js</a>:<a href="Perlin.js.html#line154">154</a>
   </code>
 </div>
 
@@ -982,7 +1073,7 @@
 
 <!--
 <pre>
-{"comment":"/**\n   * Samples 3D Perlin Nosie at given coordinates.\n   * @param {THREE.Vector}3 input Coordincates to sample at\n   * @returns {number} Value of Perlin Noise at that coordinate.\n   */","meta":{"range":[3771,5127],"filename":"Perlin.js","lineno":139,"columnno":2,"path":"/home/runner/work/three-noise/three-noise/src","code":{"id":"astnode100000806","name":"Perlin#get3","type":"MethodDefinition","paramnames":["input"]},"vars":{"":null},"shortpath":"Perlin.js"},"description":"<p>Samples 3D Perlin Nosie at given coordinates.</p>","params":[{"type":{"names":["THREE.Vector"]},"description":"<p>input Coordincates to sample at</p>","name":"3"}],"returns":[{"type":{"names":["number"]},"description":"<p>Value of Perlin Noise at that coordinate.</p>"}],"name":"get3","longname":"Perlin#get3","kind":"function","memberof":"Perlin","scope":"instance","___id":"T000002R000078","___s":true,"attribs":"<span class=\"type-signature\"></span>","id":"get3","signature":"<span class=\"signature\">(3)</span><span class=\"type-signature\"> &rarr; {number}</span>","ancestors":["<a href=\"Perlin.html\">Perlin</a>#"]}
+{"comment":"/**\n   * Samples 3D Perlin Nosie at given coordinates.\n   * @param {THREE.Vector}3 input Coordincates to sample at\n   * @returns {number} Value of Perlin Noise at that coordinate.\n   */","meta":{"range":[4187,5543],"filename":"Perlin.js","lineno":154,"columnno":2,"path":"/home/runner/work/three-noise/three-noise/src","code":{"id":"astnode100000830","name":"Perlin#get3","type":"MethodDefinition","paramnames":["input"]},"vars":{"":null},"shortpath":"Perlin.js"},"description":"<p>Samples 3D Perlin Nosie at given coordinates.</p>","params":[{"type":{"names":["THREE.Vector"]},"description":"<p>input Coordincates to sample at</p>","name":"3"}],"returns":[{"type":{"names":["number"]},"description":"<p>Value of Perlin Noise at that coordinate.</p>"}],"name":"get3","longname":"Perlin#get3","kind":"function","memberof":"Perlin","scope":"instance","___id":"T000002R000085","___s":true,"attribs":"<span class=\"type-signature\"></span>","id":"get3","signature":"<span class=\"signature\">(3)</span><span class=\"type-signature\"> &rarr; {number}</span>","ancestors":["<a href=\"Perlin.html\">Perlin</a>#"]}
 </pre>
 -->
 </div>
@@ -1005,7 +1096,7 @@
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.6</a> on Mon May 03 2021 18:31:56 GMT+0000 (Coordinated Universal Time) using the LOKE theme.
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.6</a> on Mon May 03 2021 21:51:42 GMT+0000 (Coordinated Universal Time) using the LOKE theme.
 </footer>
 
 <script>prettyPrint();</script>
