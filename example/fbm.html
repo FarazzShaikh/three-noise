@@ -63,7 +63,7 @@
             dummy.position.z = y - size.h / 2;
 
             const pos = new THREE.Vector2(x, y);
-            const n = fbm.get(pos);
+            const n = fbm.get2(pos);
 
             const color = new THREE.Color();
             for (let z = 0; z < size.l; z++) {

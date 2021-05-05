@@ -29,7 +29,7 @@
 <label for="nav-trigger" class="overlay"></label>
 
 <nav class="nav">
-    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="FBM.html">FBM</a><ul class='methods'><li data-type='method'><a href="FBM.html#get">get</a></li></ul></li><li><a href="Perlin.html">Perlin</a><ul class='methods'><li data-type='method'><a href="Perlin.html#.map">map</a></li><li data-type='method'><a href="Perlin.html#get2">get2</a></li><li data-type='method'><a href="Perlin.html#get3">get3</a></li></ul></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="FBM.html">FBM</a><ul class='methods'><li data-type='method'><a href="FBM.html#get2">get2</a></li><li data-type='method'><a href="FBM.html#get3">get3</a></li></ul></li><li><a href="Perlin.html">Perlin</a><ul class='methods'><li data-type='method'><a href="Perlin.html#.map">map</a></li><li data-type='method'><a href="Perlin.html#get2">get2</a></li><li data-type='method'><a href="Perlin.html#get3">get3</a></li></ul></li></ul>
 </nav>
 
 <div id="main">
@@ -64,7 +64,9 @@ function using Perlin Nosie.</p></div>
         <br />
         <dl class="dl-horizontal methods-members">
         <dt>Methods</dt><dd><ul>
-            <li><a href="#get">get</a></li>
+            <li><a href="#get2">get2</a></li>
+            
+            <li><a href="#get3">get3</a></li>
             </ul></dd></dl></div>
 </header>
 
@@ -414,7 +416,7 @@ Use this instance to generate fBm noise.</p>
 
 <!--
 <pre>
-{"comment":"/**\n * This class is an implimentaiton of a Fractal Brownian Motion\n * function using Perlin Nosie.\n */","meta":{"range":[175,2329],"filename":"FBM.js","lineno":8,"columnno":0,"path":"/home/runner/work/three-noise/three-noise/src","code":{"id":"astnode100000010","name":"exports.FBM","type":"ClassDeclaration"},"shortpath":"FBM.js"},"name":"FBM","longname":"FBM","kind":"class","classdesc":"<p>This class is an implimentaiton of a Fractal Brownian Motion\nfunction using Perlin Nosie.</p>","scope":"global","description":"<p>Create an instance of the FBM class.\nUse this instance to generate fBm noise.</p>","memberof":"FBM","params":[{"type":{"names":["Object"]},"description":"<p>Options for fBm generaiton.</p>","name":"options","subparams":[{"type":{"names":["number"]},"description":"<p>Seed for Perlin Noise</p>","name":"seed"},{"type":{"names":["number"]},"description":"<p>What distance to view the noisemap</p>","name":"scale"},{"type":{"names":["number"]},"description":"<p>How much each octave contributes to the overall shape</p>","name":"persistance"},{"type":{"names":["number"]},"description":"<p>How much detail is added or removed at each octave</p>","name":"lacunarity"},{"type":{"names":["number"]},"description":"<p>Levels of detail you want you perlin noise to have</p>","name":"octaves"},{"type":{"names":["number"]},"description":"<p>Level of flatness within the valleys</p>","name":"redistribution"}]},null,null,null,null,null,null],"___id":"T000003R000002","___s":true,"attribs":"<span class=\"type-signature\"></span>","id":"FBM","signature":"<span class=\"signature\">(options)</span><span class=\"type-signature\"></span>","ancestors":[]}
+{"comment":"/**\n * This class is an implimentaiton of a Fractal Brownian Motion\n * function using Perlin Nosie.\n */","meta":{"range":[175,3262],"filename":"FBM.js","lineno":8,"columnno":0,"path":"/home/runner/work/three-noise/three-noise/src","code":{"id":"astnode100000010","name":"exports.FBM","type":"ClassDeclaration"},"shortpath":"FBM.js"},"name":"FBM","longname":"FBM","kind":"class","classdesc":"<p>This class is an implimentaiton of a Fractal Brownian Motion\nfunction using Perlin Nosie.</p>","scope":"global","description":"<p>Create an instance of the FBM class.\nUse this instance to generate fBm noise.</p>","memberof":"FBM","params":[{"type":{"names":["Object"]},"description":"<p>Options for fBm generaiton.</p>","name":"options","subparams":[{"type":{"names":["number"]},"description":"<p>Seed for Perlin Noise</p>","name":"seed"},{"type":{"names":["number"]},"description":"<p>What distance to view the noisemap</p>","name":"scale"},{"type":{"names":["number"]},"description":"<p>How much each octave contributes to the overall shape</p>","name":"persistance"},{"type":{"names":["number"]},"description":"<p>How much detail is added or removed at each octave</p>","name":"lacunarity"},{"type":{"names":["number"]},"description":"<p>Levels of detail you want you perlin noise to have</p>","name":"octaves"},{"type":{"names":["number"]},"description":"<p>Level of flatness within the valleys</p>","name":"redistribution"}]},null,null,null,null,null,null],"___id":"T000003R000002","___s":true,"attribs":"<span class=\"type-signature\"></span>","id":"FBM","signature":"<span class=\"signature\">(options)</span><span class=\"type-signature\"></span>","ancestors":[]}
 </pre>
 -->
 </div>
@@ -467,8 +469,8 @@ Use this instance to generate fBm noise.</p>
 
     
 
-    <h4 class="name" id="get">
-      <a href="#params-get"><span class="type-signature"></span>get</a><span class="signature">(input)</span><span class="type-signature"> &rarr; {number}</span>
+    <h4 class="name" id="get2">
+      <a href="#params-get2"><span class="type-signature"></span>get2</a><span class="signature">(input)</span><span class="type-signature"> &rarr; {number}</span>
 
     </h4>
 
@@ -487,7 +489,7 @@ Use this instance to generate fBm noise.</p>
 
 
 <div class="description">
-    <p>Sample 2D or 3D Perlin Noise with fBm at given
+    <p>Sample 2D Perlin Noise with fBm at given
 coordinates. The function will use <code>Perlin_get2</code> or <code>Perlin_get3</code>
 depending on the input vector's type.</p>
 </div>
@@ -499,7 +501,7 @@ depending on the input vector's type.</p>
 
 
 
-<div class="collapse_" id="methodCollapse-get">
+<div class="collapse_" id="methodCollapse-get2">
 
   
 
@@ -548,7 +550,7 @@ depending on the input vector's type.</p>
 
 
 
-  <div id="params-get" class="bs-callout bs-callout-primary">
+  <div id="params-get2" class="bs-callout bs-callout-primary">
     <h5>Parameters</h5>
     <!--params.tmpl-->
 
@@ -650,7 +652,215 @@ depending on the input vector's type.</p>
 
 <!--
 <pre>
-{"comment":"/**\n   * Sample 2D or 3D Perlin Noise with fBm at given\n   * coordinates. The function will use <code>Perlin_get2</code> or <code>Perlin_get3</code>\n   * depending on the input vector's type.\n   *\n   * @param {(THREE.Vector2 | THREE.Vector3)} input Coordinates to sample noise at.\n   * @returns {number} Normalized noise in the range [0, 1]\n   */","meta":{"range":[1578,2327],"filename":"FBM.js","lineno":46,"columnno":2,"path":"/home/runner/work/three-noise/three-noise/src","code":{"id":"astnode100000083","name":"FBM#get","type":"MethodDefinition","paramnames":["input"]},"vars":{"":null},"shortpath":"FBM.js"},"description":"<p>Sample 2D or 3D Perlin Noise with fBm at given\ncoordinates. The function will use <code>Perlin_get2</code> or <code>Perlin_get3</code>\ndepending on the input vector's type.</p>","params":[{"type":{"names":["THREE.Vector2","THREE.Vector3"]},"description":"<p>Coordinates to sample noise at.</p>","name":"input"}],"returns":[{"type":{"names":["number"]},"description":"<p>Normalized noise in the range [0, 1]</p>"}],"name":"get","longname":"FBM#get","kind":"function","memberof":"FBM","scope":"instance","___id":"T000002R000018","___s":true,"attribs":"<span class=\"type-signature\"></span>","id":"get","signature":"<span class=\"signature\">(input)</span><span class=\"type-signature\"> &rarr; {number}</span>","ancestors":["<a href=\"FBM.html\">FBM</a>#"]}
+{"comment":"/**\n   * Sample 2D Perlin Noise with fBm at given\n   * coordinates. The function will use <code>Perlin_get2</code> or <code>Perlin_get3</code>\n   * depending on the input vector's type.\n   *\n   * @param {(THREE.Vector2 | THREE.Vector3)} input Coordinates to sample noise at.\n   * @returns {number} Normalized noise in the range [0, 1]\n   */","meta":{"range":[1572,2230],"filename":"FBM.js","lineno":46,"columnno":2,"path":"/home/runner/work/three-noise/three-noise/src","code":{"id":"astnode100000083","name":"FBM#get2","type":"MethodDefinition","paramnames":["input"]},"vars":{"":null},"shortpath":"FBM.js"},"description":"<p>Sample 2D Perlin Noise with fBm at given\ncoordinates. The function will use <code>Perlin_get2</code> or <code>Perlin_get3</code>\ndepending on the input vector's type.</p>","params":[{"type":{"names":["THREE.Vector2","THREE.Vector3"]},"description":"<p>Coordinates to sample noise at.</p>","name":"input"}],"returns":[{"type":{"names":["number"]},"description":"<p>Normalized noise in the range [0, 1]</p>"}],"name":"get2","longname":"FBM#get2","kind":"function","memberof":"FBM","scope":"instance","___id":"T000002R000018","___s":true,"attribs":"<span class=\"type-signature\"></span>","id":"get2","signature":"<span class=\"signature\">(input)</span><span class=\"type-signature\"> &rarr; {number}</span>","ancestors":["<a href=\"FBM.html\">FBM</a>#"]}
+</pre>
+-->
+</div>
+
+        
+            <!--method.tmpl-->
+<div class="method-details">
+
+
+
+  <!--source-link.tmpl-->
+
+
+<div class="pull-right source-link-container">
+  <code class="source-link" data-tmpl="method-tmpl(1)">
+    <i class="fa fa-file-o"></i>
+    <a href="FBM.js.html">FBM.js</a>:<a href="FBM.js.html#line80">80</a>
+  </code>
+</div>
+
+
+
+
+    
+
+    
+
+    <h4 class="name" id="get3">
+      <a href="#params-get3"><span class="type-signature"></span>get3</a><span class="signature">(input)</span><span class="type-signature"> &rarr; {number}</span>
+
+    </h4>
+
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="description">
+    <p>Sample 3D Perlin Noise with fBm at given
+coordinates. The function will use <code>Perlin_get2</code> or <code>Perlin_get3</code>
+depending on the input vector's type.</p>
+</div>
+
+
+
+
+
+
+
+
+<div class="collapse_" id="methodCollapse-get3">
+
+  
+
+  
+
+<!-- details.tmpl -->
+
+
+
+
+
+
+
+
+<dl class="dl-horizontal">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+  <div id="params-get3" class="bs-callout bs-callout-primary">
+    <h5>Parameters</h5>
+    <!--params.tmpl-->
+
+
+<table class="table table-bordered">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>input</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">THREE.Vector3</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Coordinates to sample noise at.</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+  </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <div class="bs-callout bs-callout-success">
+    <h5>Returns </h5>
+
+        
+<div class="param-desc">
+    <p>Normalized noise in the range [0, 1]</p>
+</div>
+
+
+
+<dl class="param-type">
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">number</span>
+
+
+    </dd>
+</dl>
+
+    
+</div>
+  
+
+
+
+
+
+
+</div>
+
+<!--
+<pre>
+{"comment":"/**\n   * Sample 3D Perlin Noise with fBm at given\n   * coordinates. The function will use <code>Perlin_get2</code> or <code>Perlin_get3</code>\n   * depending on the input vector's type.\n   *\n   * @param {THREE.Vector3} input Coordinates to sample noise at.\n   * @returns {number} Normalized noise in the range [0, 1]\n   */","meta":{"range":[2559,3260],"filename":"FBM.js","lineno":80,"columnno":2,"path":"/home/runner/work/three-noise/three-noise/src","code":{"id":"astnode100000205","name":"FBM#get3","type":"MethodDefinition","paramnames":["input"]},"vars":{"":null},"shortpath":"FBM.js"},"description":"<p>Sample 3D Perlin Noise with fBm at given\ncoordinates. The function will use <code>Perlin_get2</code> or <code>Perlin_get3</code>\ndepending on the input vector's type.</p>","params":[{"type":{"names":["THREE.Vector3"]},"description":"<p>Coordinates to sample noise at.</p>","name":"input"}],"returns":[{"type":{"names":["number"]},"description":"<p>Normalized noise in the range [0, 1]</p>"}],"name":"get3","longname":"FBM#get3","kind":"function","memberof":"FBM","scope":"instance","___id":"T000002R000032","___s":true,"attribs":"<span class=\"type-signature\"></span>","id":"get3","signature":"<span class=\"signature\">(input)</span><span class=\"type-signature\"> &rarr; {number}</span>","ancestors":["<a href=\"FBM.html\">FBM</a>#"]}
 </pre>
 -->
 </div>
@@ -673,7 +883,7 @@ depending on the input vector's type.</p>
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.6</a> on Wed May 05 2021 11:31:55 GMT+0000 (Coordinated Universal Time) using the LOKE theme.
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.6</a> on Wed May 05 2021 11:56:40 GMT+0000 (Coordinated Universal Time) using the LOKE theme.
 </footer>
 
 <script>prettyPrint();</script>
