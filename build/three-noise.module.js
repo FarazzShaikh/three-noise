@@ -461,8 +461,7 @@ class Perlin {
    * @returns {number} Value of Perlin Noise at that coordinate.
    */
   get2(input) {
-    if (input instanceof THREE.Vector3)
-      input = new THREE.Vector2(input.x, input.y);
+    if (input.z !== undefined) input = new THREE.Vector2(input.x, input.y);
 
     const cell = new THREE.Vector2(Math.floor(input.x), Math.floor(input.y));
     input.sub(cell);
@@ -502,7 +501,7 @@ class Perlin {
    * @returns {number} Value of Perlin Noise at that coordinate.
    */
   get3(input) {
-    if (!(input instanceof THREE.Vector3))
+    if (input.z === undefined)
       throw "Input to Perlin::get3() must be of type THREE.Vector3";
 
     const cell = new THREE.Vector3(

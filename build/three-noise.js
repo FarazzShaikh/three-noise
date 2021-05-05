@@ -484,8 +484,7 @@ float perlin(vec2 pos) {
        * @returns {number} Value of Perlin Noise at that coordinate.
        */
       get2(input) {
-        if (input instanceof THREE__namespace.Vector3)
-          input = new THREE__namespace.Vector2(input.x, input.y);
+        if (input.z !== undefined) input = new THREE__namespace.Vector2(input.x, input.y);
 
         const cell = new THREE__namespace.Vector2(Math.floor(input.x), Math.floor(input.y));
         input.sub(cell);
@@ -525,7 +524,7 @@ float perlin(vec2 pos) {
        * @returns {number} Value of Perlin Noise at that coordinate.
        */
       get3(input) {
-        if (!(input instanceof THREE__namespace.Vector3))
+        if (input.z === undefined)
           throw "Input to Perlin::get3() must be of type THREE.Vector3";
 
         const cell = new THREE__namespace.Vector3(
