@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta
+      name="viewport"
+      content="width=device-width, minimal-ui, viewport-fit=cover, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no"
+    />
+    <title>Three-Noise • Perlin</title>
+    <link href="./main.css" rel="stylesheet" />
+    <style>
+      .Info {
+        color: white;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="Info">Blob - 3D Perlin Noise animated with time.</div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.js"></script>
+    <script src="../build/three-noise.js"></script>
+    <script src="https://www.fariskassim.com/stage/rebel9/teaf/blob/v4/js/perlin.js"></script>
+    <script type="module">
+      import { OrbitControls } from "./lib/OrbitControls.js";
+
+      const { Perlin } = THREE_Noise;
+
+      const scene = new THREE.Scene();
+      const camera = new THREE.PerspectiveCamera(
+        75,
+        window.innerWidth / window.innerHeight,
+        0.1,
+        1000
+      );
+
+      const renderer = new THREE.WebGLRenderer({ antialias: true });
+      renderer.setSize(window.innerWidth, window.innerHeight);
+      document.body.appendChild(renderer.domElement);
+
+      const controls = new OrbitControls(camera, renderer.domElement);
+
+      camera.position.set(25, 25, 25);
+
+      const axes = new THREE.AxesHelper(20);
+      scene.add(axes);
+
+      const light = new THREE.AmbientLight(0x404040); // soft white light
+      scene.add(light);
+
+      const dlight = new THREE.DirectionalLight(0xffffff);
+      dlight.position.set(5, 5, -5);
+      scene.add(dlight);
+
+      const geometry = new THREE.SphereGeometry(10, 128, 128);
+      const material = new THREE.MeshNormalMaterial({ wireframe: false });
+      const sphere = new THREE.Mesh(geometry, material);
+
+      const perlin = new Perlin(Math.random());
+      scene.add(sphere);
+
+      const sposition = sphere.geometry.attributes.position.clone();
+      const snormal = sphere.geometry.attributes.normal.clone();
+      const l = sposition.count;
+
+      const animate = function (dt) {
+        requestAnimationFrame(animate);
+        controls.update();
+        renderer.render(scene, camera);
+
+        const position = sphere.geometry.attributes.position;
+        const normal = sphere.geometry.attributes.normal;
+
+        const p = [];
+        for (let i = 0; i < l; i++) {
+          const pos = new THREE.Vector3().fromBufferAttribute(sposition, i);
+          const norm = new THREE.Vector3().fromBufferAttribute(snormal, i);
+          const newPos = pos.clone();
+
+          pos.multiplyScalar(0.3);
+          pos.x += dt * 0.002;
+          const n = perlin.get3(pos) * 10;
+
+          newPos.add(norm.multiplyScalar(n));
+
+          p.push(newPos);
+        }
+
+        position.copyVector3sArray(p);
+
+        sphere.geometry.computeVertexNormals();
+        sphere.geometry.attributes.position.needsUpdate = true;
+      };
+
+      animate();
+    </script>
+  </body>
+</html>

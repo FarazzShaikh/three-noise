@@ -48,15 +48,12 @@
         <article>
             <pre class="prettyprint source linenums"><code>import * as THREE from "three";
 import header from "./shaders/header.js";
+import p from "./p.js";
 
 /**
  * An implimentation of Perlin Noise by Ken Perlin.
  */
 export class Perlin {
-  _seed = 0;
-  _gradientVecs;
-  _offsetMatrix;
-
   /**
    * GLSL Shader Chunk for 2D Perlin Noise. Can be used with
    * three-CustomShaderMaterial.
@@ -69,8 +66,7 @@ export class Perlin {
    * @param {number} seed Seed Value for PRNG.
    */
   constructor(seed) {
-    this._seed = seed;
-    this._gradientVecs = [
+    const _gradientVecs = [
       // 2D Vecs
       new THREE.Vector3(1, 1, 0),
       new THREE.Vector3(-1, 1, 0),
@@ -86,16 +82,40 @@ export class Perlin {
       new THREE.Vector3(0, 1, -1),
       new THREE.Vector3(0, -1, -1),
     ];
+
+    var perm = new Array(512);
+    var gradP = new Array(512);
+
+    if (!seed) seed = 1;
+    seed *= 65536;
+
+    seed = Math.floor(seed);
+    if (seed &lt; 256) {
+      seed |= seed &lt;&lt; 8;
+    }
+
+    for (var i = 0; i &lt; 256; i++) {
+      var v;
+      if (i &amp; 1) {
+        v = p[i] ^ (seed &amp; 255);
+      } else {
+        v = p[i] ^ ((seed >> 8) &amp; 255);
+      }
+
+      perm[i] = perm[i + 256] = v;
+      gradP[i] = gradP[i + 256] = _gradientVecs[v % 12];
+    }
+
+    this._seed = seed;
+
     this._offsetMatrix = [
-      // 2D Vecs
       new THREE.Vector3(0, 0, 0),
-      new THREE.Vector3(0, 1, 0),
-      new THREE.Vector3(1, 0, 0),
-      new THREE.Vector3(1, 1, 0),
-      // + 3D Vecs
       new THREE.Vector3(0, 0, 1),
+      new THREE.Vector3(0, 1, 0),
       new THREE.Vector3(0, 1, 1),
+      new THREE.Vector3(1, 0, 0),
       new THREE.Vector3(1, 0, 1),
+      new THREE.Vector3(1, 1, 0),
       new THREE.Vector3(1, 1, 1),
     ];
 
@@ -105,6 +125,9 @@ export class Perlin {
       main: "",
       uniforms: [{ three_noise_seed: this._seed }],
     };
+
+    this.perm = perm;
+    this.gradP = gradP;
   }
 
   _fade(t) {
@@ -115,26 +138,12 @@ export class Perlin {
     return (1 - t) * a + t * b;
   }
 
-  _hash(a) {
-    a = a ^ 61 ^ (a >> 16);
-    a = a + (a &lt;&lt; 3);
-    a = a ^ (a >> 4);
-    a = a * 0x27d4eb2d;
-    a = a ^ (a >> 15);
-    return a;
-  }
-
   _gradient(posInCell) {
-    let gradientVecIndex;
-
-    const x = this._hash(this._seed + posInCell.x);
-    const y = this._hash(this._seed + x + posInCell.y);
-
-    if (posInCell instanceof THREE.Vector3)
-      gradientVecIndex = this._hash(this._seed + y + posInCell.z) % 12;
-    else gradientVecIndex = y % 4;
-
-    return gradientVecIndex;
+    if (posInCell instanceof THREE.Vector3) {
+      return posInCell.x + this.perm[posInCell.y + this.perm[posInCell.z]];
+    } else {
+      return posInCell.x + this.perm[posInCell.y];
+    }
   }
 
   /**
@@ -152,37 +161,34 @@ export class Perlin {
 
   /**
    * Samples 2D Perlin Nosie at given coordinates.
-   * @param {THREE.Vector2} input Coordincates to sample at
+   * @param {THREE.Vector2 | THREE.Vector3} input Coordincates to sample at
    * @returns {number} Value of Perlin Noise at that coordinate.
    */
   get2(input) {
-    if (!(input instanceof THREE.Vector2))
-      throw "Input to Noise::perlin2() must be of type THREE.Vector2";
+    if (input.z !== undefined) input = new THREE.Vector2(input.x, input.y);
 
     const cell = new THREE.Vector2(Math.floor(input.x), Math.floor(input.y));
-    const posInCell = input.sub(cell);
+    input.sub(cell);
 
-    // Wrap the integer cells at 255 (smaller integer period can be introduced here)
     cell.x &amp;= 255;
     cell.y &amp;= 255;
 
     const gradiantDot = [];
     for (let i = 0; i &lt; 4; i++) {
-      const s3 = this._offsetMatrix[i];
+      const s3 = this._offsetMatrix[i * 2];
       const s = new THREE.Vector2(s3.x, s3.y);
 
-      const grad3 = this._gradientVecs[
-        this._gradient(new THREE.Vector2(0, 0).addVectors(cell, s))
+      const grad3 = this.gradP[
+        this._gradient(new THREE.Vector2().addVectors(cell, s))
       ];
       const grad2 = new THREE.Vector2(grad3.x, grad3.y);
-      const dist2 = new THREE.Vector2(0, 0).subVectors(posInCell, s);
+      const dist2 = new THREE.Vector2().subVectors(input, s);
 
       gradiantDot.push(grad2.dot(dist2));
     }
 
-    // Compute the this.fade curve value for x, y, z
-    const u = this._fade(posInCell.x);
-    const v = this._fade(posInCell.y);
+    const u = this._fade(input.x);
+    const v = this._fade(input.y);
 
     const value = this._lerp(
       this._lerp(gradiantDot[0], gradiantDot[2], u),
@@ -190,7 +196,6 @@ export class Perlin {
       v
     );
 
-    // Interpolate
     return Perlin.map(value, -1, 1, 0, 1);
   }
 
@@ -200,17 +205,16 @@ export class Perlin {
    * @returns {number} Value of Perlin Noise at that coordinate.
    */
   get3(input) {
-    if (!(input instanceof THREE.Vector3))
-      throw "Input to Noise::perlin3() must be of type THREE.Vector3";
+    if (input.z === undefined)
+      throw "Input to Perlin::get3() must be of type THREE.Vector3";
 
     const cell = new THREE.Vector3(
       Math.floor(input.x),
       Math.floor(input.y),
       Math.floor(input.z)
     );
-    const posInCell = input.sub(cell);
+    input.sub(cell);
 
-    // Wrap the integer cells at 255 (smaller integer period can be introduced here)
     cell.x &amp;= 255;
     cell.y &amp;= 255;
     cell.z &amp;= 255;
@@ -219,18 +223,17 @@ export class Perlin {
     for (let i = 0; i &lt; 8; i++) {
       const s = this._offsetMatrix[i];
 
-      const grad3 = this._gradientVecs[
-        this._gradient(new THREE.Vector3(0, 0, 0).addVectors(cell, s))
+      const grad3 = this.gradP[
+        this._gradient(new THREE.Vector3().addVectors(cell, s))
       ];
-      const dist2 = new THREE.Vector3(0, 0, 0).subVectors(posInCell, s);
+      const dist2 = new THREE.Vector3().subVectors(input, s);
 
       gradiantDot.push(grad3.dot(dist2));
     }
 
-    // Compute the this.fade curve value for x, y, z
-    const u = this._fade(posInCell.x);
-    const v = this._fade(posInCell.y);
-    const w = this._fade(posInCell.z);
+    const u = this._fade(input.x);
+    const v = this._fade(input.y);
+    const w = this._fade(input.z);
 
     const value = this._lerp(
       this._lerp(
@@ -246,7 +249,6 @@ export class Perlin {
       v
     );
 
-    // Interpolate
     return Perlin.map(value, -1, 1, 0, 1);
   }
 }
@@ -263,7 +265,7 @@ export class Perlin {
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.6</a> on Mon May 03 2021 21:51:42 GMT+0000 (Coordinated Universal Time) using the LOKE theme.
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.6</a> on Wed May 05 2021 11:19:53 GMT+0000 (Coordinated Universal Time) using the LOKE theme.
 </footer>
 
 <script>prettyPrint();</script>
