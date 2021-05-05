@@ -36,28 +36,60 @@ export class FBM {
   }
 
   /**
-   * Sample 2D or 3D Perlin Noise with fBm at given
+   * Sample 2D Perlin Noise with fBm at given
    * coordinates. The function will use <code>Perlin_get2</code> or <code>Perlin_get3</code>
    * depending on the input vector's type.
    *
    * @param {(THREE.Vector2 | THREE.Vector3)} input Coordinates to sample noise at.
    * @returns {number} Normalized noise in the range [0, 1]
    */
-  get(input) {
+  get2(input) {
     let result = 0;
     let amplitude = 1;
     let frequency = 1;
     let max = amplitude;
 
-    let noiseFunction =
-      input instanceof THREE.Vector3
-        ? this._noise.get3.bind(this._noise)
-        : this._noise.get2.bind(this._noise);
+    let noiseFunction = this._noise.get2.bind(this._noise);
 
     for (let i = 0; i < this._octaves; i++) {
       const position = new THREE.Vector2(
         input.x * this._scale * frequency,
         input.y * this._scale * frequency
+      );
+
+      const noiseVal = noiseFunction(position) * 2 - 1;
+      result += noiseVal * amplitude;
+
+      frequency *= this._lacunarity;
+      amplitude *= this._persistance;
+      max += amplitude;
+    }
+
+    const redistributed = Math.pow(result, this._redistribution);
+    return redistributed / max + 0.5;
+  }
+
+  /**
+   * Sample 3D Perlin Noise with fBm at given
+   * coordinates. The function will use <code>Perlin_get2</code> or <code>Perlin_get3</code>
+   * depending on the input vector's type.
+   *
+   * @param {THREE.Vector3} input Coordinates to sample noise at.
+   * @returns {number} Normalized noise in the range [0, 1]
+   */
+  get3(input) {
+    let result = 0;
+    let amplitude = 1;
+    let frequency = 1;
+    let max = amplitude;
+
+    let noiseFunction = this._noise.get3.bind(this._noise);
+
+    for (let i = 0; i < this._octaves; i++) {
+      const position = new THREE.Vector2(
+        input.x * this._scale * frequency,
+        input.y * this._scale * frequency,
+        input.z * this._scale * frequency
       );
 
       const noiseVal = noiseFunction(position) * 2 - 1;
