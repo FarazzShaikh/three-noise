@@ -374,13 +374,6 @@ float perlin(vec2 pos) {
      */
     class Perlin {
       /**
-       * GLSL Shader Chunk for 2D Perlin Noise. Can be used with
-       * three-CustomShaderMaterial.
-       * See: <a href="https://github.com/FarazzShaikh/THREE-CustomShaderMaterial">three-CustomShaderMaterial</a>
-       */
-      shaderChunk;
-
-      /**
        *
        * @param {number} seed Seed Value for PRNG.
        */
@@ -438,6 +431,11 @@ float perlin(vec2 pos) {
           new THREE__namespace.Vector3(1, 1, 1),
         ];
 
+        /**
+         * GLSL Shader Chunk for 2D Perlin Noise. Can be used with
+         * three-CustomShaderMaterial.
+         * See: <a href="https://github.com/FarazzShaikh/THREE-CustomShaderMaterial">three-CustomShaderMaterial</a>
+         */
         this.shaderChunk = {
           defines: "",
           header: header,
