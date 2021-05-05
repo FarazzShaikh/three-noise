@@ -6,13 +6,6 @@ import { Perlin } from "./Perlin.js";
  * function using Perlin Nosie.
  */
 export class FBM {
-  _scale;
-  _persistance;
-  _lacunarity;
-  _octaves;
-  _redistribution;
-  _noise;
-
   /**
    * Create an instance of the FBM class.
    * Use this instance to generate fBm noise.
@@ -35,11 +28,11 @@ export class FBM {
       redistribution,
     } = options;
     this._noise = new Perlin(seed);
-    this._scale = scale ?? 1;
-    this._persistance = persistance ?? 0.5;
-    this._lacunarity = lacunarity ?? 2;
-    this._octaves = octaves ?? 6;
-    this._redistribution = redistribution ?? 1;
+    this._scale = scale || 1;
+    this._persistance = persistance || 0.5;
+    this._lacunarity = lacunarity || 2;
+    this._octaves = octaves || 6;
+    this._redistribution = redistribution || 1;
   }
 
   /**
