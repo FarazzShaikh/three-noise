@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta
+      name="viewport"
+      content="width=device-width, minimal-ui, viewport-fit=cover, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no"
+    />
+    <title>Three-Noise • Perlin</title>
+    <link href="./main.css" rel="stylesheet" />
+    <style>
+      .Info {
+        color: white;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="Info">Blob - 3D Perlin Noise animated with time.</div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.js"></script>
+    <script src="../build/three-noise.js"></script>
+    <script src="https://www.fariskassim.com/stage/rebel9/teaf/blob/v4/js/perlin.js"></script>
+    <script type="module">
+      import { OrbitControls } from "./lib/OrbitControls.js";
+      import { CustomShaderMaterial, TYPES } from "./lib/three-csm.module.js";
+
+      const { Perlin } = THREE_Noise;
+
+      function fetchAll(...resources) {
+        var destination = [];
+        resources.forEach((it) => {
+          destination.push(fetch(it));
+        });
+        return Promise.all(destination);
+      }
+
+      const w = fetchAll(
+        "./shaders/main.glsl",
+        "./shaders/header.glsl",
+        "./shaders/defines.glsl"
+      );
+      w.then(async (e) => {
+        let main = await e[0].text();
+        let header = await e[1].text();
+        let defines = await e[2].text();
+
+        const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(
+          75,
+          window.innerWidth / window.innerHeight,
+          0.1,
+          1000
+        );
+
+        const renderer = new THREE.WebGLRenderer({ antialias: true });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        document.body.appendChild(renderer.domElement);
+
+        const controls = new OrbitControls(camera, renderer.domElement);
+
+        camera.position.set(1, 1, 1);
+
+        const axes = new THREE.AxesHelper(1);
+        scene.add(axes);
+
+        const light = new THREE.AmbientLight(0x404040); // soft white light
+        scene.add(light);
+
+        const dlight = new THREE.DirectionalLight(0xffffff);
+        dlight.position.set(5, 5, -5);
+        scene.add(dlight);
+
+        const perlin = new Perlin(Math.random());
+        const geometry = new THREE.PlaneGeometry(1, 1, 64, 64);
+
+        const material = new CustomShaderMaterial({
+          baseMaterial: TYPES.NORMAL, // Material to extend
+          vShader: {
+            defines: perlin.shaderChunk.defines + defines,
+            header: perlin.shaderChunk.header + header, // Custom Vertex Shader
+            main: perlin.shaderChunk.main + main,
+          },
+          uniforms: [
+            {
+              dt: { value: 0 },
+            },
+          ],
+          passthrough: {
+            wireframe: false,
+            side: THREE.DoubleSide,
+            // lights: true, // Options passthrough to unerlying material.
+          },
+        });
+
+        const plane = new THREE.Mesh(geometry, material);
+        plane.geometry.rotateX(-Math.PI / 2);
+
+        scene.add(plane);
+
+        const animate = function (dt) {
+          requestAnimationFrame(animate);
+          controls.update();
+          renderer.render(scene, camera);
+
+          material.updateUniform("dt", dt);
+        };
+
+        animate();
+      });
+    </script>
+  </body>
+</html>

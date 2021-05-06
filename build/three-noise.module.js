@@ -1,91 +1,6 @@
 import * as THREE from 'three';
 
-var header = `
-
-uniform int three_noise_seed;
-
-vec3 three_noise_gradientVecs[12] = vec3[](
-    // 2D Vecs
-    vec3(1, 1, 0),
-    vec3(-1, 1, 0),
-    vec3(1, -1, 0),
-    vec3(-1, -1, 0),
-    // + 3D Vecs
-    vec3(1, 0, 1),
-    vec3(-1, 0, 1),
-    vec3(1, 0, -1),
-    vec3(-1, 0, -1),
-    vec3(0, 1, 1),
-    vec3(0, -1, 1),
-    vec3(0, 1, -1),
-    vec3(0, -1, -1)
-);
-
-vec3 three_noise_offsetMatrix[8] = vec3[](
-    // 2D Vecs
-    vec3(0, 0, 0),
-    vec3(0, 1, 0),
-    vec3(1, 0, 0),
-    vec3(1, 1, 0),
-    // + 3D Vecs
-    vec3(0, 0, 1),
-    vec3(0, 1, 1),
-    vec3(1, 0, 1),
-    vec3(1, 1, 1)
-);
-
-int three_noise_hash(int a) {
-    a = a ^ 61 ^ (a >> 16);
-    a = a + (a << 3);
-    a = a ^ (a >> 4);
-    a = a * 0x27d4eb2d;
-    a = a ^ (a >> 15);
-    return a;
-}
-
-int three_noise_gradient(vec2 posInCell) {
-    int x = three_noise_hash(three_noise_seed + int(posInCell.x));
-    int y = three_noise_hash(three_noise_seed + x + int(posInCell.y));
-    return y % 4;
-}
-
-float three_noise_fade(float t) {
-    return t * t * t * (t * (t * 6.0 - 15.0) + 10.0);
-}
-
-
-float perlin(vec2 pos) {
-    vec2 cell = floor(pos);
-    vec2 posInCell = pos - cell;
-
-    float gradiantDot[4];
-    for (int i = 0; i < 4; i++) {
-        vec3 s3 = three_noise_offsetMatrix[i];
-        vec2 s = s3.xy;
-
-        vec3 grad3 = three_noise_gradientVecs[
-            three_noise_gradient(cell + s)
-        ];
-        vec2 grad2 = grad3.xy;
-        vec2 dist2 = posInCell - s;
-    
-        gradiantDot[i] = dot(grad2, dist2);
-    }
-
-    // Compute the this.fade curve value for x, y, z
-    float u = three_noise_fade(posInCell.x);
-    float v = three_noise_fade(posInCell.y);
-
-    float value = mix(
-        mix(gradiantDot[0], gradiantDot[2], u),
-        mix(gradiantDot[1], gradiantDot[3], u),
-        v
-    );
-
-    return value;
-}
-
-`;
+var definitions_perlin = "#define GLSLIFY 1\n// From https://github.com/hughsk/glsl-noise/blob/master/periodic/2d.glsl\n\n//\n// GLSL textureless classic 2D noise \"cnoise\",\n// with an RSL-style periodic variant \"pnoise\".\n// Author:  Stefan Gustavson (stefan.gustavson@liu.se)\n// Version: 2011-08-22\n//\n// Many thanks to Ian McEwan of Ashima Arts for the\n// ideas for permutation and gradient selection.\n//\n// Copyright (c) 2011 Stefan Gustavson. All rights reserved.\n// Distributed under the MIT license. See LICENSE file.\n// https://github.com/ashima/webgl-noise\n//\n\nvec4 mod289(vec4 x) { return x - floor(x * (1.0 / 289.0)) * 289.0; }\n\nvec4 permute(vec4 x) { return mod289(((x * 34.0) + 1.0) * x); }\n\nvec4 taylorInvSqrt(vec4 r) { return 1.79284291400159 - 0.85373472095314 * r; }\n\nvec2 fade(vec2 t) { return t * t * t * (t * (t * 6.0 - 15.0) + 10.0); }\n\n// Classic Perlin noise, periodic variant\nfloat perlin(vec2 P) {\n\n  vec2 rep = vec2(255.0, 255.0);\n\n  vec4 Pi = floor(P.xyxy) + vec4(0.0, 0.0, 1.0, 1.0);\n  vec4 Pf = fract(P.xyxy) - vec4(0.0, 0.0, 1.0, 1.0);\n  Pi = mod(Pi, rep.xyxy); // To create noise with explicit period\n  Pi = mod289(Pi);        // To avoid truncation effects in permutation\n  vec4 ix = Pi.xzxz;\n  vec4 iy = Pi.yyww;\n  vec4 fx = Pf.xzxz;\n  vec4 fy = Pf.yyww;\n\n  vec4 i = permute(permute(ix) + iy);\n\n  vec4 gx = fract(i * (1.0 / 41.0)) * 2.0 - 1.0;\n  vec4 gy = abs(gx) - 0.5;\n  vec4 tx = floor(gx + 0.5);\n  gx = gx - tx;\n\n  vec2 g00 = vec2(gx.x, gy.x);\n  vec2 g10 = vec2(gx.y, gy.y);\n  vec2 g01 = vec2(gx.z, gy.z);\n  vec2 g11 = vec2(gx.w, gy.w);\n\n  vec4 norm = taylorInvSqrt(\n      vec4(dot(g00, g00), dot(g01, g01), dot(g10, g10), dot(g11, g11)));\n  g00 *= norm.x;\n  g01 *= norm.y;\n  g10 *= norm.z;\n  g11 *= norm.w;\n\n  float n00 = dot(g00, vec2(fx.x, fy.x));\n  float n10 = dot(g10, vec2(fx.y, fy.y));\n  float n01 = dot(g01, vec2(fx.z, fy.z));\n  float n11 = dot(g11, vec2(fx.w, fy.w));\n\n  vec2 fade_xy = fade(Pf.xy);\n  vec2 n_x = mix(vec2(n00, n01), vec2(n10, n11), fade_xy.x);\n  float n_xy = mix(n_x.x, n_x.y, fade_xy.y);\n  return 2.3 * n_xy;\n}\n\nfloat fbm(vec2 pos, vec4 props) {\n  float persistance = props.x;\n  float lacunarity = props.y;\n  float redistribution = props.z;\n  int octaves = int(props.w);\n\n  float result = 0.0;\n  float amplitude = 1.0;\n  float frequency = 1.0;\n  float maximum = amplitude;\n\n  for (int i = 0; i < 2; i++) {\n\n    vec2 p = pos.xy * frequency;\n\n    float noiseVal = perlin(p) * 2.0 - 1.0;\n    result += noiseVal * amplitude;\n\n    frequency *= lacunarity;\n    amplitude *= persistance;\n    maximum += amplitude;\n  }\n\n  float redistributed = pow(result, redistribution);\n  return redistributed / maximum + 0.5;\n}"; // eslint-disable-line
 
 var p = [
   151,
@@ -415,7 +330,7 @@ class Perlin {
      */
     this.shaderChunk = {
       defines: "",
-      header: header,
+      header: definitions_perlin,
       main: "",
       uniforms: [{ three_noise_seed: this._seed }],
     };

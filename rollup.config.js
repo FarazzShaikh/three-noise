@@ -1,3 +1,16 @@
+import glslify from "rollup-plugin-glslify";
+
+const glslOpts = {
+  // Default
+  include: ["**/*.vs", "**/*.fs", "**/*.vert", "**/*.frag", "**/*.glsl"],
+
+  // Undefined by default
+  exclude: "node_modules/**",
+
+  // Compress shader by default using logic from rollup-plugin-glsl
+  compress: false,
+};
+
 export default [
   {
     input: "index.js",
@@ -6,6 +19,7 @@ export default [
       format: "es",
     },
     external: ["three"],
+    plugins: [glslify(glslOpts)],
   },
   {
     input: "index.js",
@@ -18,5 +32,6 @@ export default [
       name: "THREE_Noise",
     },
     external: ["three"],
+    plugins: [glslify(glslOpts)],
   },
 ];

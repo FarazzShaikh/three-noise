@@ -1,5 +1,5 @@
 import * as THREE from "three";
-import header from "./shaders/header.js";
+import definitions_perlin from "./shaders/perlin.glsl";
 import p from "./p.js";
 
 /**
@@ -71,7 +71,7 @@ export class Perlin {
      */
     this.shaderChunk = {
       defines: "",
-      header: header,
+      header: definitions_perlin,
       main: "",
       uniforms: [{ three_noise_seed: this._seed }],
     };
