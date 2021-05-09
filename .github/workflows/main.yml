@@ -29,7 +29,6 @@ jobs:
       - name: Pre Release 👷
         run: |
           cat CHANGELOG.md > CHANGELOG.txt
-          cat CHANGELOG.txt
 
       - name: Release 🚀
         uses: softprops/action-gh-release@v1

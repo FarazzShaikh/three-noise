@@ -23,6 +23,10 @@ vec4 taylorInvSqrt(vec4 r) { return 1.79284291400159 - 0.85373472095314 * r; }
 
 vec2 fade(vec2 t) { return t * t * t * (t * (t * 6.0 - 15.0) + 10.0); }
 
+float map(float value, float min1, float max1, float min2, float max2) {
+  return min2 + (value - min1) * (max2 - min2) / (max1 - min1);
+}
+
 // Classic Perlin noise, periodic variant
 float perlin(vec2 P) {
 
@@ -64,7 +68,7 @@ float perlin(vec2 P) {
   vec2 fade_xy = fade(Pf.xy);
   vec2 n_x = mix(vec2(n00, n01), vec2(n10, n11), fade_xy.x);
   float n_xy = mix(n_x.x, n_x.y, fade_xy.y);
-  return 2.3 * n_xy;
+  return map(2.3 * n_xy, -1.0, 1.0, 0.0, 1.0);
 }
 
 float fbm(vec2 pos, vec4 props) {
@@ -82,7 +86,7 @@ float fbm(vec2 pos, vec4 props) {
 
     vec2 p = pos.xy * frequency;
 
-    float noiseVal = perlin(p) * 2.0 - 1.0;
+    float noiseVal = perlin(p);
     result += noiseVal * amplitude;
 
     frequency *= lacunarity;
@@ -91,5 +95,5 @@ float fbm(vec2 pos, vec4 props) {
   }
 
   float redistributed = pow(result, redistribution);
-  return redistributed / maximum + 0.5;
+  return redistributed / maximum;
 }
