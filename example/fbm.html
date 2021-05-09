@@ -51,7 +51,7 @@
 
       function genCubes(scene) {
         const geometry = new THREE.BoxGeometry(1, 1, 1);
-        const material = new THREE.MeshBasicMaterial();
+        const material = new THREE.MeshToonMaterial();
         mesh = new THREE.InstancedMesh(geometry, material, count);
         mesh.instanceMatrix.setUsage(THREE.DynamicDrawUsage); // will be updated every frame
         scene.add(mesh);

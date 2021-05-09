@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta
+      name="viewport"
+      content="width=device-width, minimal-ui, viewport-fit=cover, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no"
+    />
+    <title>Three-Noise • Perlin</title>
+    <link href="./main.css" rel="stylesheet" />
+    <style>
+      .Info {
+        color: white;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="Info">
+      Domain Warp - Based on
+      <a href="https://www.iquilezles.org/www/articles/warp/warp.htm"
+        >an article by Inigo Quilez.</a
+      >
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.js"></script>
+    <script src="../build/three-noise.js"></script>
+    <script src="https://www.fariskassim.com/stage/rebel9/teaf/blob/v4/js/perlin.js"></script>
+    <script type="module">
+      import { OrbitControls } from "./lib/OrbitControls.js";
+      import { OutlineEffect } from "./lib/OutlineEffect.js";
+      import { CustomShaderMaterial, TYPES } from "./lib/three-csm.module.js";
+
+      const { Perlin } = THREE_Noise;
+
+      function fetchAll(...resources) {
+        var destination = [];
+        resources.forEach((it) => {
+          destination.push(fetch(it));
+        });
+        return Promise.all(destination);
+      }
+
+      const w = fetchAll("./shaders/f_DomainWarp.glsl").then(async (f) => {
+        const fragmentShader = await f[0].text();
+
+        const renderer = new THREE.WebGLRenderer();
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        document.body.appendChild(renderer.domElement);
+
+        const camera = new THREE.OrthographicCamera(
+          -1, // left
+          1, // right
+          1, // top
+          -1, // bottom
+          -1, // near,
+          1 // far
+        );
+        const perlin = new Perlin(15);
+        const scene = new THREE.Scene();
+        const plane = new THREE.PlaneGeometry(2, 2);
+        const uniforms = {
+          iTime: { value: 0 },
+          iResolution: { value: new THREE.Vector3() },
+        };
+        const material = new THREE.ShaderMaterial({
+          fragmentShader: perlin.shaderChunk.header + fragmentShader,
+          uniforms,
+        });
+        scene.add(new THREE.Mesh(plane, material));
+
+        function resizeRendererToDisplaySize(renderer) {
+          const canvas = renderer.domElement;
+          const width = canvas.clientWidth;
+          const height = canvas.clientHeight;
+          const needResize = canvas.width !== width || canvas.height !== height;
+          if (needResize) {
+            renderer.setSize(width, height, false);
+          }
+          return needResize;
+        }
+
+        function render(time) {
+          time *= 0.001;
+          resizeRendererToDisplaySize(renderer);
+
+          const canvas = renderer.domElement;
+          uniforms.iResolution.value.set(canvas.width, canvas.height, 1);
+          uniforms.iTime.value = time;
+
+          renderer.render(scene, camera);
+
+          requestAnimationFrame(render);
+        }
+
+        requestAnimationFrame(render);
+      });
+    </script>
+  </body>
+</html>
