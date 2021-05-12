@@ -41,8 +41,8 @@
 
       const fbm = new FBM({
         seed: Math.random(),
-        scale: 0.05,
-        octaves: 4,
+        scale: 0.06,
+        octaves: 6,
         persistance: 0.5,
         lacunarity: 2,
         redistribution: 1,
@@ -63,7 +63,8 @@
             dummy.position.z = y - size.h / 2;
 
             const pos = new THREE.Vector2(x, y);
-            const n = fbm.get2(pos);
+            let n = fbm.get2(pos);
+            n = n * 0.5 + 0.5;
 
             const color = new THREE.Color();
             for (let z = 0; z < size.l; z++) {
@@ -74,13 +75,13 @@
 
               switch (z) {
                 case 0:
-                  if (n < 0.25) {
+                  if (n < 0.35) {
                     color.setHex(0x046582);
-                    dummy.position.y = 0.3 * 15 - z;
-                  } else if (n < 0.3) {
+                    dummy.position.y = 0.4 * 15 - z;
+                  } else if (n < 0.4) {
                     color.setHex(0xa7d0cd);
-                    dummy.position.y = 0.3 * 15 - z;
-                  } else if (n < 0.35) {
+                    dummy.position.y = 0.4 * 15 - z;
+                  } else if (n < 0.45) {
                     color.setHex(0xffd3b4);
                   } else if (n < 0.6) {
                     if (1 < 0) color.setHex(0x8db596);

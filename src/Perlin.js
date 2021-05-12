@@ -128,9 +128,8 @@ export class Perlin {
       const s3 = this._offsetMatrix[i * 2];
       const s = new THREE.Vector2(s3.x, s3.y);
 
-      const grad3 = this.gradP[
-        this._gradient(new THREE.Vector2().addVectors(cell, s))
-      ];
+      const grad3 =
+        this.gradP[this._gradient(new THREE.Vector2().addVectors(cell, s))];
       const grad2 = new THREE.Vector2(grad3.x, grad3.y);
       const dist2 = new THREE.Vector2().subVectors(input, s);
 
@@ -146,7 +145,7 @@ export class Perlin {
       v
     );
 
-    return Perlin.map(value, -1, 1, 0, 1);
+    return value;
   }
 
   /**
@@ -173,9 +172,8 @@ export class Perlin {
     for (let i = 0; i < 8; i++) {
       const s = this._offsetMatrix[i];
 
-      const grad3 = this.gradP[
-        this._gradient(new THREE.Vector3().addVectors(cell, s))
-      ];
+      const grad3 =
+        this.gradP[this._gradient(new THREE.Vector3().addVectors(cell, s))];
       const dist2 = new THREE.Vector3().subVectors(input, s);
 
       gradiantDot.push(grad3.dot(dist2));
@@ -199,6 +197,6 @@ export class Perlin {
       v
     );
 
-    return Perlin.map(value, -1, 1, 0, 1);
+    return value;
   }
 }

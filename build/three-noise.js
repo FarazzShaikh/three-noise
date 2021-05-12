@@ -410,9 +410,8 @@ var THREE_Noise = (function (exports, THREE) {
         const s3 = this._offsetMatrix[i * 2];
         const s = new THREE__namespace.Vector2(s3.x, s3.y);
 
-        const grad3 = this.gradP[
-          this._gradient(new THREE__namespace.Vector2().addVectors(cell, s))
-        ];
+        const grad3 =
+          this.gradP[this._gradient(new THREE__namespace.Vector2().addVectors(cell, s))];
         const grad2 = new THREE__namespace.Vector2(grad3.x, grad3.y);
         const dist2 = new THREE__namespace.Vector2().subVectors(input, s);
 
@@ -428,7 +427,7 @@ var THREE_Noise = (function (exports, THREE) {
         v
       );
 
-      return Perlin.map(value, -1, 1, 0, 1);
+      return value;
     }
 
     /**
@@ -455,9 +454,8 @@ var THREE_Noise = (function (exports, THREE) {
       for (let i = 0; i < 8; i++) {
         const s = this._offsetMatrix[i];
 
-        const grad3 = this.gradP[
-          this._gradient(new THREE__namespace.Vector3().addVectors(cell, s))
-        ];
+        const grad3 =
+          this.gradP[this._gradient(new THREE__namespace.Vector3().addVectors(cell, s))];
         const dist2 = new THREE__namespace.Vector3().subVectors(input, s);
 
         gradiantDot.push(grad3.dot(dist2));
@@ -481,7 +479,7 @@ var THREE_Noise = (function (exports, THREE) {
         v
       );
 
-      return Perlin.map(value, -1, 1, 0, 1);
+      return value;
     }
   }
 
@@ -503,14 +501,8 @@ var THREE_Noise = (function (exports, THREE) {
      * @param {number} options.redistribution Level of flatness within the valleys
      */
     constructor(options) {
-      const {
-        seed,
-        scale,
-        persistance,
-        lacunarity,
-        octaves,
-        redistribution,
-      } = options;
+      const { seed, scale, persistance, lacunarity, octaves, redistribution } =
+        options;
       this._noise = new Perlin(seed);
       this._scale = scale || 1;
       this._persistance = persistance || 0.5;
@@ -541,7 +533,7 @@ var THREE_Noise = (function (exports, THREE) {
           input.y * this._scale * frequency
         );
 
-        const noiseVal = noiseFunction(position) * 2 - 1;
+        const noiseVal = noiseFunction(position);
         result += noiseVal * amplitude;
 
         frequency *= this._lacunarity;
@@ -550,7 +542,7 @@ var THREE_Noise = (function (exports, THREE) {
       }
 
       const redistributed = Math.pow(result, this._redistribution);
-      return redistributed / max + 0.5;
+      return redistributed / max;
     }
 
     /**
@@ -576,7 +568,7 @@ var THREE_Noise = (function (exports, THREE) {
           input.z * this._scale * frequency
         );
 
-        const noiseVal = noiseFunction(position) * 2 - 1;
+        const noiseVal = noiseFunction(position);
         result += noiseVal * amplitude;
 
         frequency *= this._lacunarity;
@@ -585,7 +577,7 @@ var THREE_Noise = (function (exports, THREE) {
       }
 
       const redistributed = Math.pow(result, this._redistribution);
-      return redistributed / max + 0.5;
+      return redistributed / max;
     }
   }
 

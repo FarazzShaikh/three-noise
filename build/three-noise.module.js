@@ -387,9 +387,8 @@ class Perlin {
       const s3 = this._offsetMatrix[i * 2];
       const s = new THREE.Vector2(s3.x, s3.y);
 
-      const grad3 = this.gradP[
-        this._gradient(new THREE.Vector2().addVectors(cell, s))
-      ];
+      const grad3 =
+        this.gradP[this._gradient(new THREE.Vector2().addVectors(cell, s))];
       const grad2 = new THREE.Vector2(grad3.x, grad3.y);
       const dist2 = new THREE.Vector2().subVectors(input, s);
 
@@ -405,7 +404,7 @@ class Perlin {
       v
     );
 
-    return Perlin.map(value, -1, 1, 0, 1);
+    return value;
   }
 
   /**
@@ -432,9 +431,8 @@ class Perlin {
     for (let i = 0; i < 8; i++) {
       const s = this._offsetMatrix[i];
 
-      const grad3 = this.gradP[
-        this._gradient(new THREE.Vector3().addVectors(cell, s))
-      ];
+      const grad3 =
+        this.gradP[this._gradient(new THREE.Vector3().addVectors(cell, s))];
       const dist2 = new THREE.Vector3().subVectors(input, s);
 
       gradiantDot.push(grad3.dot(dist2));
@@ -458,7 +456,7 @@ class Perlin {
       v
     );
 
-    return Perlin.map(value, -1, 1, 0, 1);
+    return value;
   }
 }
 
@@ -480,14 +478,8 @@ class FBM {
    * @param {number} options.redistribution Level of flatness within the valleys
    */
   constructor(options) {
-    const {
-      seed,
-      scale,
-      persistance,
-      lacunarity,
-      octaves,
-      redistribution,
-    } = options;
+    const { seed, scale, persistance, lacunarity, octaves, redistribution } =
+      options;
     this._noise = new Perlin(seed);
     this._scale = scale || 1;
     this._persistance = persistance || 0.5;
@@ -518,7 +510,7 @@ class FBM {
         input.y * this._scale * frequency
       );
 
-      const noiseVal = noiseFunction(position) * 2 - 1;
+      const noiseVal = noiseFunction(position);
       result += noiseVal * amplitude;
 
       frequency *= this._lacunarity;
@@ -527,7 +519,7 @@ class FBM {
     }
 
     const redistributed = Math.pow(result, this._redistribution);
-    return redistributed / max + 0.5;
+    return redistributed / max;
   }
 
   /**
@@ -553,7 +545,7 @@ class FBM {
         input.z * this._scale * frequency
       );
 
-      const noiseVal = noiseFunction(position) * 2 - 1;
+      const noiseVal = noiseFunction(position);
       result += noiseVal * amplitude;
 
       frequency *= this._lacunarity;
@@ -562,7 +554,7 @@ class FBM {
     }
 
     const redistributed = Math.pow(result, this._redistribution);
-    return redistributed / max + 0.5;
+    return redistributed / max;
   }
 }
 

@@ -19,14 +19,8 @@ export class FBM {
    * @param {number} options.redistribution Level of flatness within the valleys
    */
   constructor(options) {
-    const {
-      seed,
-      scale,
-      persistance,
-      lacunarity,
-      octaves,
-      redistribution,
-    } = options;
+    const { seed, scale, persistance, lacunarity, octaves, redistribution } =
+      options;
     this._noise = new Perlin(seed);
     this._scale = scale || 1;
     this._persistance = persistance || 0.5;
@@ -57,7 +51,7 @@ export class FBM {
         input.y * this._scale * frequency
       );
 
-      const noiseVal = noiseFunction(position) * 2 - 1;
+      const noiseVal = noiseFunction(position);
       result += noiseVal * amplitude;
 
       frequency *= this._lacunarity;
@@ -66,7 +60,7 @@ export class FBM {
     }
 
     const redistributed = Math.pow(result, this._redistribution);
-    return redistributed / max + 0.5;
+    return redistributed / max;
   }
 
   /**
@@ -92,7 +86,7 @@ export class FBM {
         input.z * this._scale * frequency
       );
 
-      const noiseVal = noiseFunction(position) * 2 - 1;
+      const noiseVal = noiseFunction(position);
       result += noiseVal * amplitude;
 
       frequency *= this._lacunarity;
@@ -101,6 +95,6 @@ export class FBM {
     }
 
     const redistributed = Math.pow(result, this._redistribution);
-    return redistributed / max + 0.5;
+    return redistributed / max;
   }
 }
