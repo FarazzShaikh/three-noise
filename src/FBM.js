@@ -80,7 +80,7 @@ export class FBM {
     let noiseFunction = this._noise.get3.bind(this._noise);
 
     for (let i = 0; i < this._octaves; i++) {
-      const position = new THREE.Vector2(
+      const position = new THREE.Vector3(
         input.x * this._scale * frequency,
         input.y * this._scale * frequency,
         input.z * this._scale * frequency
