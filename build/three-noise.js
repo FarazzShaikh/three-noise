@@ -562,7 +562,7 @@ var THREE_Noise = (function (exports, THREE) {
       let noiseFunction = this._noise.get3.bind(this._noise);
 
       for (let i = 0; i < this._octaves; i++) {
-        const position = new THREE__namespace.Vector2(
+        const position = new THREE__namespace.Vector3(
           input.x * this._scale * frequency,
           input.y * this._scale * frequency,
           input.z * this._scale * frequency
