@@ -29,7 +29,6 @@
   "author": "Faraz Shaikh",
   "license": "MIT",
   "dependencies": {
-    "three": "^0.128.0"
   },
   "devDependencies": {
     "jsdoc": "^3.6.6",
