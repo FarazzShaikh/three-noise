@@ -1,4 +1,3 @@
-import * as THREE from "three";
 import definitions_perlin from "./shaders/perlin.glsl";
 import p from "./p.js";
 
@@ -9,23 +8,24 @@ export class Perlin {
   /**
    *
    * @param {number} seed Seed Value for PRNG.
+   * @param {object} THREE.js instance, or { Vector2, Vector3 }
    */
-  constructor(seed) {
+  constructor(seed, { Vector2, Vector3 }) {
     const _gradientVecs = [
       // 2D Vecs
-      new THREE.Vector3(1, 1, 0),
-      new THREE.Vector3(-1, 1, 0),
-      new THREE.Vector3(1, -1, 0),
-      new THREE.Vector3(-1, -1, 0),
+      new Vector3(1, 1, 0),
+      new Vector3(-1, 1, 0),
+      new Vector3(1, -1, 0),
+      new Vector3(-1, -1, 0),
       // + 3D Vecs
-      new THREE.Vector3(1, 0, 1),
-      new THREE.Vector3(-1, 0, 1),
-      new THREE.Vector3(1, 0, -1),
-      new THREE.Vector3(-1, 0, -1),
-      new THREE.Vector3(0, 1, 1),
-      new THREE.Vector3(0, -1, 1),
-      new THREE.Vector3(0, 1, -1),
-      new THREE.Vector3(0, -1, -1),
+      new Vector3(1, 0, 1),
+      new Vector3(-1, 0, 1),
+      new Vector3(1, 0, -1),
+      new Vector3(-1, 0, -1),
+      new Vector3(0, 1, 1),
+      new Vector3(0, -1, 1),
+      new Vector3(0, 1, -1),
+      new Vector3(0, -1, -1),
     ];
 
     var perm = new Array(512);
@@ -54,14 +54,14 @@ export class Perlin {
     this._seed = seed;
 
     this._offsetMatrix = [
-      new THREE.Vector3(0, 0, 0),
-      new THREE.Vector3(0, 0, 1),
-      new THREE.Vector3(0, 1, 0),
-      new THREE.Vector3(0, 1, 1),
-      new THREE.Vector3(1, 0, 0),
-      new THREE.Vector3(1, 0, 1),
-      new THREE.Vector3(1, 1, 0),
-      new THREE.Vector3(1, 1, 1),
+      new Vector3(0, 0, 0),
+      new Vector3(0, 0, 1),
+      new Vector3(0, 1, 0),
+      new Vector3(0, 1, 1),
+      new Vector3(1, 0, 0),
+      new Vector3(1, 0, 1),
+      new Vector3(1, 1, 0),
+      new Vector3(1, 1, 1),
     ];
 
     /**
@@ -76,8 +76,9 @@ export class Perlin {
       uniforms: [{ three_noise_seed: this._seed }],
     };
 
-    this.perm = perm;
-    this.gradP = gradP;
+    this._perm = perm;
+    this._gradP = gradP;
+    this._three = { Vector2, Vector3 }
   }
 
   _fade(t) {
@@ -89,10 +90,12 @@ export class Perlin {
   }
 
   _gradient(posInCell) {
-    if (posInCell instanceof THREE.Vector3) {
-      return posInCell.x + this.perm[posInCell.y + this.perm[posInCell.z]];
+    const { Vector3 } = this._three
+    const perm = this._perm
+    if (posInCell instanceof Vector3) {
+      return posInCell.x + perm[posInCell.y + perm[posInCell.z]];
     } else {
-      return posInCell.x + this.perm[posInCell.y];
+      return posInCell.x + perm[posInCell.y];
     }
   }
 
@@ -111,13 +114,14 @@ export class Perlin {
 
   /**
    * Samples 2D Perlin Nosie at given coordinates.
-   * @param {THREE.Vector2 | THREE.Vector3} input Coordincates to sample at
+   * @param {Vector2 | THREE.Vector3} input Coordincates to sample at
    * @returns {number} Value of Perlin Noise at that coordinate.
    */
   get2(input) {
-    if (input.z !== undefined) input = new THREE.Vector2(input.x, input.y);
+    const { Vector2 } = this._three
+    if (input.z !== undefined) input = new Vector2(input.x, input.y);
 
-    const cell = new THREE.Vector2(Math.floor(input.x), Math.floor(input.y));
+    const cell = new Vector2(Math.floor(input.x), Math.floor(input.y));
     input.sub(cell);
 
     cell.x &= 255;
@@ -126,12 +130,12 @@ export class Perlin {
     const gradiantDot = [];
     for (let i = 0; i < 4; i++) {
       const s3 = this._offsetMatrix[i * 2];
-      const s = new THREE.Vector2(s3.x, s3.y);
+      const s = new Vector2(s3.x, s3.y);
 
       const grad3 =
-        this.gradP[this._gradient(new THREE.Vector2().addVectors(cell, s))];
-      const grad2 = new THREE.Vector2(grad3.x, grad3.y);
-      const dist2 = new THREE.Vector2().subVectors(input, s);
+        this._gradP[this._gradient(new Vector2().addVectors(cell, s))];
+      const grad2 = new Vector2(grad3.x, grad3.y);
+      const dist2 = new Vector2().subVectors(input, s);
 
       gradiantDot.push(grad2.dot(dist2));
     }
@@ -150,14 +154,16 @@ export class Perlin {
 
   /**
    * Samples 3D Perlin Nosie at given coordinates.
-   * @param {THREE.Vector}3 input Coordincates to sample at
+   * @param {Vector}3 input Coordincates to sample at
    * @returns {number} Value of Perlin Noise at that coordinate.
    */
   get3(input) {
+    const { Vector3 } = this._three
+
     if (input.z === undefined)
       throw "Input to Perlin::get3() must be of type THREE.Vector3";
 
-    const cell = new THREE.Vector3(
+    const cell = new Vector3(
       Math.floor(input.x),
       Math.floor(input.y),
       Math.floor(input.z)
@@ -173,8 +179,8 @@ export class Perlin {
       const s = this._offsetMatrix[i];
 
       const grad3 =
-        this.gradP[this._gradient(new THREE.Vector3().addVectors(cell, s))];
-      const dist2 = new THREE.Vector3().subVectors(input, s);
+        this._gradP[this._gradient(new Vector3().addVectors(cell, s))];
+      const dist2 = new Vector3().subVectors(input, s);
 
       gradiantDot.push(grad3.dot(dist2));
     }
