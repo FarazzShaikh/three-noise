@@ -1,27 +1,5 @@
-var THREE_Noise = (function (exports, THREE) {
+var THREE_Noise = (function (exports) {
   'use strict';
-
-  function _interopNamespace(e) {
-    if (e && e.__esModule) return e;
-    var n = Object.create(null);
-    if (e) {
-      Object.keys(e).forEach(function (k) {
-        if (k !== 'default') {
-          var d = Object.getOwnPropertyDescriptor(e, k);
-          Object.defineProperty(n, k, d.get ? d : {
-            enumerable: true,
-            get: function () {
-              return e[k];
-            }
-          });
-        }
-      });
-    }
-    n['default'] = e;
-    return Object.freeze(n);
-  }
-
-  var THREE__namespace = /*#__PURE__*/_interopNamespace(THREE);
 
   var definitions_perlin = "#define GLSLIFY 1\n// From https://github.com/hughsk/glsl-noise/blob/master/periodic/2d.glsl\n\n//\n// GLSL textureless classic 2D noise \"cnoise\",\n// with an RSL-style periodic variant \"pnoise\".\n// Author:  Stefan Gustavson (stefan.gustavson@liu.se)\n// Version: 2011-08-22\n//\n// Many thanks to Ian McEwan of Ashima Arts for the\n// ideas for permutation and gradient selection.\n//\n// Copyright (c) 2011 Stefan Gustavson. All rights reserved.\n// Distributed under the MIT license. See LICENSE file.\n// https://github.com/ashima/webgl-noise\n//\n\nvec4 mod289(vec4 x) { return x - floor(x * (1.0 / 289.0)) * 289.0; }\n\nvec4 permute(vec4 x) { return mod289(((x * 34.0) + 1.0) * x); }\n\nvec4 taylorInvSqrt(vec4 r) { return 1.79284291400159 - 0.85373472095314 * r; }\n\nvec2 fade(vec2 t) { return t * t * t * (t * (t * 6.0 - 15.0) + 10.0); }\n\nfloat map(float value, float min1, float max1, float min2, float max2) {\n  return min2 + (value - min1) * (max2 - min2) / (max1 - min1);\n}\n\n// Classic Perlin noise, periodic variant\nfloat perlin(vec2 P) {\n\n  vec2 rep = vec2(255.0, 255.0);\n\n  vec4 Pi = floor(P.xyxy) + vec4(0.0, 0.0, 1.0, 1.0);\n  vec4 Pf = fract(P.xyxy) - vec4(0.0, 0.0, 1.0, 1.0);\n  Pi = mod(Pi, rep.xyxy); // To create noise with explicit period\n  Pi = mod289(Pi);        // To avoid truncation effects in permutation\n  vec4 ix = Pi.xzxz;\n  vec4 iy = Pi.yyww;\n  vec4 fx = Pf.xzxz;\n  vec4 fy = Pf.yyww;\n\n  vec4 i = permute(permute(ix) + iy);\n\n  vec4 gx = fract(i * (1.0 / 41.0)) * 2.0 - 1.0;\n  vec4 gy = abs(gx) - 0.5;\n  vec4 tx = floor(gx + 0.5);\n  gx = gx - tx;\n\n  vec2 g00 = vec2(gx.x, gy.x);\n  vec2 g10 = vec2(gx.y, gy.y);\n  vec2 g01 = vec2(gx.z, gy.z);\n  vec2 g11 = vec2(gx.w, gy.w);\n\n  vec4 norm = taylorInvSqrt(\n      vec4(dot(g00, g00), dot(g01, g01), dot(g10, g10), dot(g11, g11)));\n  g00 *= norm.x;\n  g01 *= norm.y;\n  g10 *= norm.z;\n  g11 *= norm.w;\n\n  float n00 = dot(g00, vec2(fx.x, fy.x));\n  float n10 = dot(g10, vec2(fx.y, fy.y));\n  float n01 = dot(g01, vec2(fx.z, fy.z));\n  float n11 = dot(g11, vec2(fx.w, fy.w));\n\n  vec2 fade_xy = fade(Pf.xy);\n  vec2 n_x = mix(vec2(n00, n01), vec2(n10, n11), fade_xy.x);\n  float n_xy = mix(n_x.x, n_x.y, fade_xy.y);\n  return map(2.3 * n_xy, -1.0, 1.0, 0.0, 1.0);\n}\n\nfloat fbm(vec2 pos, vec4 props) {\n  float persistance = props.x;\n  float lacunarity = props.y;\n  float redistribution = props.z;\n  int octaves = int(props.w);\n\n  float result = 0.0;\n  float amplitude = 1.0;\n  float frequency = 1.0;\n  float maximum = amplitude;\n\n  for (int i = 0; i < 2; i++) {\n\n    vec2 p = pos.xy * frequency;\n\n    float noiseVal = perlin(p);\n    result += noiseVal * amplitude;\n\n    frequency *= lacunarity;\n    amplitude *= persistance;\n    maximum += amplitude;\n  }\n\n  float redistributed = pow(result, redistribution);\n  return redistributed / maximum;\n}\n"; // eslint-disable-line
 
@@ -291,23 +269,24 @@ var THREE_Noise = (function (exports, THREE) {
     /**
      *
      * @param {number} seed Seed Value for PRNG.
+     * @param {object} THREE.js instance, or { Vector2, Vector3 }
      */
-    constructor(seed) {
+    constructor(seed, { Vector2, Vector3 }) {
       const _gradientVecs = [
         // 2D Vecs
-        new THREE__namespace.Vector3(1, 1, 0),
-        new THREE__namespace.Vector3(-1, 1, 0),
-        new THREE__namespace.Vector3(1, -1, 0),
-        new THREE__namespace.Vector3(-1, -1, 0),
+        new Vector3(1, 1, 0),
+        new Vector3(-1, 1, 0),
+        new Vector3(1, -1, 0),
+        new Vector3(-1, -1, 0),
         // + 3D Vecs
-        new THREE__namespace.Vector3(1, 0, 1),
-        new THREE__namespace.Vector3(-1, 0, 1),
-        new THREE__namespace.Vector3(1, 0, -1),
-        new THREE__namespace.Vector3(-1, 0, -1),
-        new THREE__namespace.Vector3(0, 1, 1),
-        new THREE__namespace.Vector3(0, -1, 1),
-        new THREE__namespace.Vector3(0, 1, -1),
-        new THREE__namespace.Vector3(0, -1, -1),
+        new Vector3(1, 0, 1),
+        new Vector3(-1, 0, 1),
+        new Vector3(1, 0, -1),
+        new Vector3(-1, 0, -1),
+        new Vector3(0, 1, 1),
+        new Vector3(0, -1, 1),
+        new Vector3(0, 1, -1),
+        new Vector3(0, -1, -1),
       ];
 
       var perm = new Array(512);
@@ -336,14 +315,14 @@ var THREE_Noise = (function (exports, THREE) {
       this._seed = seed;
 
       this._offsetMatrix = [
-        new THREE__namespace.Vector3(0, 0, 0),
-        new THREE__namespace.Vector3(0, 0, 1),
-        new THREE__namespace.Vector3(0, 1, 0),
-        new THREE__namespace.Vector3(0, 1, 1),
-        new THREE__namespace.Vector3(1, 0, 0),
-        new THREE__namespace.Vector3(1, 0, 1),
-        new THREE__namespace.Vector3(1, 1, 0),
-        new THREE__namespace.Vector3(1, 1, 1),
+        new Vector3(0, 0, 0),
+        new Vector3(0, 0, 1),
+        new Vector3(0, 1, 0),
+        new Vector3(0, 1, 1),
+        new Vector3(1, 0, 0),
+        new Vector3(1, 0, 1),
+        new Vector3(1, 1, 0),
+        new Vector3(1, 1, 1),
       ];
 
       /**
@@ -358,8 +337,9 @@ var THREE_Noise = (function (exports, THREE) {
         uniforms: [{ three_noise_seed: this._seed }],
       };
 
-      this.perm = perm;
-      this.gradP = gradP;
+      this._perm = perm;
+      this._gradP = gradP;
+      this._three = { Vector2, Vector3 };
     }
 
     _fade(t) {
@@ -371,10 +351,12 @@ var THREE_Noise = (function (exports, THREE) {
     }
 
     _gradient(posInCell) {
-      if (posInCell instanceof THREE__namespace.Vector3) {
-        return posInCell.x + this.perm[posInCell.y + this.perm[posInCell.z]];
+      const { Vector3 } = this._three;
+      const perm = this._perm;
+      if (posInCell instanceof Vector3) {
+        return posInCell.x + perm[posInCell.y + perm[posInCell.z]];
       } else {
-        return posInCell.x + this.perm[posInCell.y];
+        return posInCell.x + perm[posInCell.y];
       }
     }
 
@@ -393,13 +375,14 @@ var THREE_Noise = (function (exports, THREE) {
 
     /**
      * Samples 2D Perlin Nosie at given coordinates.
-     * @param {THREE.Vector2 | THREE.Vector3} input Coordincates to sample at
+     * @param {Vector2 | THREE.Vector3} input Coordincates to sample at
      * @returns {number} Value of Perlin Noise at that coordinate.
      */
     get2(input) {
-      if (input.z !== undefined) input = new THREE__namespace.Vector2(input.x, input.y);
+      const { Vector2 } = this._three;
+      if (input.z !== undefined) input = new Vector2(input.x, input.y);
 
-      const cell = new THREE__namespace.Vector2(Math.floor(input.x), Math.floor(input.y));
+      const cell = new Vector2(Math.floor(input.x), Math.floor(input.y));
       input.sub(cell);
 
       cell.x &= 255;
@@ -408,12 +391,12 @@ var THREE_Noise = (function (exports, THREE) {
       const gradiantDot = [];
       for (let i = 0; i < 4; i++) {
         const s3 = this._offsetMatrix[i * 2];
-        const s = new THREE__namespace.Vector2(s3.x, s3.y);
+        const s = new Vector2(s3.x, s3.y);
 
         const grad3 =
-          this.gradP[this._gradient(new THREE__namespace.Vector2().addVectors(cell, s))];
-        const grad2 = new THREE__namespace.Vector2(grad3.x, grad3.y);
-        const dist2 = new THREE__namespace.Vector2().subVectors(input, s);
+          this._gradP[this._gradient(new Vector2().addVectors(cell, s))];
+        const grad2 = new Vector2(grad3.x, grad3.y);
+        const dist2 = new Vector2().subVectors(input, s);
 
         gradiantDot.push(grad2.dot(dist2));
       }
@@ -432,14 +415,16 @@ var THREE_Noise = (function (exports, THREE) {
 
     /**
      * Samples 3D Perlin Nosie at given coordinates.
-     * @param {THREE.Vector}3 input Coordincates to sample at
+     * @param {Vector}3 input Coordincates to sample at
      * @returns {number} Value of Perlin Noise at that coordinate.
      */
     get3(input) {
+      const { Vector3 } = this._three;
+
       if (input.z === undefined)
         throw "Input to Perlin::get3() must be of type THREE.Vector3";
 
-      const cell = new THREE__namespace.Vector3(
+      const cell = new Vector3(
         Math.floor(input.x),
         Math.floor(input.y),
         Math.floor(input.z)
@@ -455,8 +440,8 @@ var THREE_Noise = (function (exports, THREE) {
         const s = this._offsetMatrix[i];
 
         const grad3 =
-          this.gradP[this._gradient(new THREE__namespace.Vector3().addVectors(cell, s))];
-        const dist2 = new THREE__namespace.Vector3().subVectors(input, s);
+          this._gradP[this._gradient(new Vector3().addVectors(cell, s))];
+        const dist2 = new Vector3().subVectors(input, s);
 
         gradiantDot.push(grad3.dot(dist2));
       }
@@ -493,6 +478,7 @@ var THREE_Noise = (function (exports, THREE) {
      * Use this instance to generate fBm noise.
      *
      * @param {Object} options Options for fBm generaiton.
+     * @param {number} options.THREE THREE.js instance, or { Vector2, Vector3 }
      * @param {number} options.seed Seed for Perlin Noise
      * @param {number} options.scale What distance to view the noisemap
      * @param {number} options.persistance How much each octave contributes to the overall shape
@@ -501,14 +487,15 @@ var THREE_Noise = (function (exports, THREE) {
      * @param {number} options.redistribution Level of flatness within the valleys
      */
     constructor(options) {
-      const { seed, scale, persistance, lacunarity, octaves, redistribution } =
+      const { THREE: { Vector2, Vector3 }, seed, scale, persistance, lacunarity, octaves, redistribution } =
         options;
-      this._noise = new Perlin(seed);
+      this._noise = new Perlin(seed, { Vector2, Vector3 });
       this._scale = scale || 1;
       this._persistance = persistance || 0.5;
       this._lacunarity = lacunarity || 2;
       this._octaves = octaves || 6;
       this._redistribution = redistribution || 1;
+      this._three = { Vector2, Vector3 };
     }
 
     /**
@@ -516,10 +503,12 @@ var THREE_Noise = (function (exports, THREE) {
      * coordinates. The function will use <code>Perlin_get2</code> or <code>Perlin_get3</code>
      * depending on the input vector's type.
      *
-     * @param {(THREE.Vector2 | THREE.Vector3)} input Coordinates to sample noise at.
+     * @param {(Vector2 | THREE.Vector3)} input Coordinates to sample noise at.
      * @returns {number} Normalized noise in the range [0, 1]
      */
     get2(input) {
+      const { Vector2 } = this._three;
+
       let result = 0;
       let amplitude = 1;
       let frequency = 1;
@@ -528,7 +517,7 @@ var THREE_Noise = (function (exports, THREE) {
       let noiseFunction = this._noise.get2.bind(this._noise);
 
       for (let i = 0; i < this._octaves; i++) {
-        const position = new THREE__namespace.Vector2(
+        const position = new Vector2(
           input.x * this._scale * frequency,
           input.y * this._scale * frequency
         );
@@ -550,10 +539,12 @@ var THREE_Noise = (function (exports, THREE) {
      * coordinates. The function will use <code>Perlin_get2</code> or <code>Perlin_get3</code>
      * depending on the input vector's type.
      *
-     * @param {THREE.Vector3} input Coordinates to sample noise at.
+     * @param {Vector3} input Coordinates to sample noise at.
      * @returns {number} Normalized noise in the range [0, 1]
      */
     get3(input) {
+      const { Vector3 } = this._three;
+
       let result = 0;
       let amplitude = 1;
       let frequency = 1;
@@ -562,7 +553,7 @@ var THREE_Noise = (function (exports, THREE) {
       let noiseFunction = this._noise.get3.bind(this._noise);
 
       for (let i = 0; i < this._octaves; i++) {
-        const position = new THREE__namespace.Vector3(
+        const position = new Vector3(
           input.x * this._scale * frequency,
           input.y * this._scale * frequency,
           input.z * this._scale * frequency
@@ -588,4 +579,4 @@ var THREE_Noise = (function (exports, THREE) {
 
   return exports;
 
-}({}, THREE));
+}({}));
