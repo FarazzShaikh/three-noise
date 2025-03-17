@@ -20,11 +20,19 @@
   </head>
   <body>
     <div class="Info">Voxel Terrain - 2D Perlin Noise + fbm</div>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.js"></script>
-    <script src="../build/three-noise.js"></script>
+    <script src="./three-noise.js"></script>
+	<script type="importmap">
+		{
+		   "imports": {
+			  "three": "https://cdn.jsdelivr.net/npm/three@0.174.0/+esm",
+			  "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.174.0/examples/jsm/"
+		   }
+		}
+	</script>
     <script type="module">
-      import { OrbitControls } from "./lib/OrbitControls.js";
-      import { OutlineEffect } from "./lib/OutlineEffect.js";
+      import * as THREE from 'three'
+      import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+      import { OutlineEffect } from "three/addons/effects/OutlineEffect.js";
 
       const { FBM } = THREE_Noise;
 
@@ -40,6 +48,7 @@
       const count = size.w * size.h * size.l;
 
       const fbm = new FBM({
+        THREE,
         seed: Math.random(),
         scale: 0.06,
         octaves: 6,

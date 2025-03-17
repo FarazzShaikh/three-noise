@@ -17,11 +17,18 @@
   </head>
   <body>
     <div class="Info">Blob - 3D Perlin Noise animated with time.</div>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.js"></script>
-    <script src="../build/three-noise.js"></script>
-    <script src="https://www.fariskassim.com/stage/rebel9/teaf/blob/v4/js/perlin.js"></script>
+    <script src="./three-noise.js"></script>
+    <script type="importmap">
+       {
+          "imports": {
+             "three": "https://cdn.jsdelivr.net/npm/three@0.174.0/+esm",
+             "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.174.0/examples/jsm/"
+          }
+       }
+	</script>
     <script type="module">
-      import { OrbitControls } from "./lib/OrbitControls.js";
+      import * as THREE from 'three'
+      import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 
       const { Perlin } = THREE_Noise;
 
@@ -55,12 +62,16 @@
       const material = new THREE.MeshNormalMaterial({ wireframe: false });
       const sphere = new THREE.Mesh(geometry, material);
 
-      const perlin = new Perlin(Math.random());
+      const perlin = new Perlin(Math.random(), THREE);
       scene.add(sphere);
 
       const sposition = sphere.geometry.attributes.position.clone();
       const snormal = sphere.geometry.attributes.normal.clone();
       const l = sposition.count;
+
+	  const pos = new THREE.Vector3();
+	  const norm = new THREE.Vector3();
+	  const newPos = new THREE.Vector3();
 
       const animate = function (dt) {
         requestAnimationFrame(animate);
@@ -70,11 +81,10 @@
         const position = sphere.geometry.attributes.position;
         const normal = sphere.geometry.attributes.normal;
 
-        const p = [];
         for (let i = 0; i < l; i++) {
-          const pos = new THREE.Vector3().fromBufferAttribute(sposition, i);
-          const norm = new THREE.Vector3().fromBufferAttribute(snormal, i);
-          const newPos = pos.clone();
+          pos.fromBufferAttribute(sposition, i);
+          norm.fromBufferAttribute(snormal, i);
+          newPos.copy(pos);
 
           pos.multiplyScalar(0.3);
           pos.x += dt * 0.002;
@@ -82,10 +92,8 @@
 
           newPos.add(norm.multiplyScalar(n));
 
-          p.push(newPos);
+          sphere.geometry.attributes.position.setXYZ(i, newPos.x, newPos.y, newPos.z)
         }
-
-        position.copyVector3sArray(p);
 
         sphere.geometry.computeVertexNormals();
         sphere.geometry.attributes.position.needsUpdate = true;
