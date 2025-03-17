@@ -1,6 +1,6 @@
 {
   "name": "three-noise",
-  "version": "1.1.2",
+  "version": "1.2.0",
   "description": "Simple gradient noise library for use with Three.js. Now with fBm!",
   "main": "build/three-noise.module.js",
   "type": "module",
