@@ -7,12 +7,6 @@
   "main": "index.js",
   "module": "index.esm.js",
   "types": "types/index.d.ts",
-  "files": [
-    "dist",
-    "package.json",
-    "README.md",
-    "LICENSE.md"
-  ],
   "private": true,
   "workspaces": [
     "example"
