@@ -1,19 +1,23 @@
 {
-  "name": "three-noise",
-  "version": "1.1.2",
+  "name": "ts-noise",
+  "version": "1.2.0",
   "description": "Simple gradient noise library for use with Three.js. Now with fBm!",
-  "main": "build/three-noise.module.js",
-  "type": "module",
+  "main": "index.js",
+  "module": "index.esm.js",
+  "types": "types/index.d.ts",
   "files": [
-    "build/three-noise.module.js",
-    "README.md",
-    "package.json"
+    "dist"
   ],
+  "private": true,
+  "workspaces": [
+    "example"
+  ],
+  "type": "module",
   "repository": "https://github.com/FarazzShaikh/three-noise",
   "scripts": {
     "build": "rollup -c",
-    "test": "uvu tests",
-    "doc": "jsdoc --configure jsdoc.json --verbose && chmod +x scripts/doc.sh && scripts/doc.sh"
+    "doc": "jsdoc --configure jsdoc.json --verbose && chmod +x scripts/doc.sh && scripts/doc.sh",
+    "dev": "yarn build & yarn workspace example dev"
   },
   "keywords": [
     "threejs",
@@ -28,13 +32,16 @@
   ],
   "author": "Faraz Shaikh",
   "license": "MIT",
-  "dependencies": {
-    "three": "^0.128.0"
-  },
+  "dependencies": {},
   "devDependencies": {
+    "@rollup/plugin-typescript": "^12.1.2",
     "jsdoc": "^3.6.6",
     "loke-jsdoc-theme": "^2.1.0",
     "rollup": "^2.46.0",
-    "rollup-plugin-glslify": "^1.2.0"
+    "rollup-plugin-copy": "^3.5.0",
+    "rollup-plugin-glslify": "^1.2.0",
+    "rollup-plugin-uglify": "^6.0.4",
+    "tslib": "^2.8.1",
+    "typescript": "^5.8.2"
   }
 }

@@ -1,0 +1,32 @@
+{
+  "compilerOptions": {
+    "target": "es2016",
+    "module": "esnext",
+    "sourceMap": true,
+    "outDir": "dist",
+    "declarationDir": "dist/types",
+    "strict": false,
+    "moduleResolution": "node",
+    "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "declaration": true,
+
+    "noEmit": false,
+    "baseUrl": "./src",
+    "lib": ["dom", "dom.iterable", "esnext"],
+    "paths": {
+      "*": ["*"]
+    },
+    "allowJs": true,
+    "isolatedModules": true,
+    "noImplicitAny": false,
+    "resolveJsonModule": true,
+    "strictNullChecks": true,
+    "noUnusedLocals": false,
+    "noUnusedParameters": false
+  },
+  "include": ["src", "*.tsx", "*.ts"],
+  "exclude": ["coverage", "config", "dist", "node_modules/**"]
+}
