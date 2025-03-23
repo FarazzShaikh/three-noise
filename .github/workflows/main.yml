@@ -21,8 +21,8 @@ jobs:
       - name: Install and Build
         run: |
           cd example
-          yarn
           yarn add ts-noise
+          yarn
           yarn build
 
       - name: Deploy to GitHub Pages
