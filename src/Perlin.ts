@@ -1,16 +1,15 @@
-import definitions_perlin from "./shaders/perlin.glsl";
-import p from "./p.js";
+import p from "./utils/p";
+import { Vector2 } from "./utils/Vector2";
+import { Vector3 } from "./utils/Vector3";
 
-/**
- * An implimentation of Perlin Noise by Ken Perlin.
- */
 export class Perlin {
-  /**
-   *
-   * @param {number} seed Seed Value for PRNG.
-   * @param {object} THREE.js instance, or { Vector2, Vector3 }
-   */
-  constructor(seed, { Vector2, Vector3 }) {
+  _seed: number;
+  _offsetMatrix: Vector3[];
+  _perm: number[];
+  _gradP: Vector3[];
+  _three: { Vector2: any; Vector3: any };
+
+  constructor(seed: number) {
     const _gradientVecs = [
       // 2D Vecs
       new Vector3(1, 1, 0),
@@ -64,21 +63,8 @@ export class Perlin {
       new Vector3(1, 1, 1),
     ];
 
-    /**
-     * GLSL Shader Chunk for 2D Perlin Noise. Can be used with
-     * three-CustomShaderMaterial.
-     * See: <a href="https://github.com/FarazzShaikh/THREE-CustomShaderMaterial">three-CustomShaderMaterial</a>
-     */
-    this.shaderChunk = {
-      defines: "",
-      header: definitions_perlin,
-      main: "",
-      uniforms: [{ three_noise_seed: this._seed }],
-    };
-
     this._perm = perm;
     this._gradP = gradP;
-    this._three = { Vector2, Vector3 }
   }
 
   _fade(t) {
@@ -90,8 +76,7 @@ export class Perlin {
   }
 
   _gradient(posInCell) {
-    const { Vector3 } = this._three
-    const perm = this._perm
+    const perm = this._perm;
     if (posInCell instanceof Vector3) {
       return posInCell.x + perm[posInCell.y + perm[posInCell.z]];
     } else {
@@ -99,27 +84,10 @@ export class Perlin {
     }
   }
 
-  /**
-   * Maps a number from one range to another.
-   * @param {number} x       Input Number
-   * @param {number} in_min  Current range minimum
-   * @param {number} in_max  Current range maximum
-   * @param {number} out_min New range minimum
-   * @param {number} out_max New range maximum
-   * @returns {number} Input Mapped to range [out_min, out_max]
-   */
-  static map(x, in_min, in_max, out_min, out_max) {
-    return ((x - in_min) * (out_max - out_min)) / (in_max - in_min) + out_min;
-  }
-
-  /**
-   * Samples 2D Perlin Nosie at given coordinates.
-   * @param {Vector2 | THREE.Vector3} input Coordincates to sample at
-   * @returns {number} Value of Perlin Noise at that coordinate.
-   */
-  get2(input) {
-    const { Vector2 } = this._three
-    if (input.z !== undefined) input = new Vector2(input.x, input.y);
+  get2(input: Vector2 | number[]) {
+    if (Array.isArray(input)) {
+      input = new Vector2(input[0], input[1]);
+    }
 
     const cell = new Vector2(Math.floor(input.x), Math.floor(input.y));
     input.sub(cell);
@@ -127,7 +95,7 @@ export class Perlin {
     cell.x &= 255;
     cell.y &= 255;
 
-    const gradiantDot = [];
+    const gradiantDot: number[] = [];
     for (let i = 0; i < 4; i++) {
       const s3 = this._offsetMatrix[i * 2];
       const s = new Vector2(s3.x, s3.y);
@@ -152,13 +120,10 @@ export class Perlin {
     return value;
   }
 
-  /**
-   * Samples 3D Perlin Nosie at given coordinates.
-   * @param {Vector}3 input Coordincates to sample at
-   * @returns {number} Value of Perlin Noise at that coordinate.
-   */
-  get3(input) {
-    const { Vector3 } = this._three
+  get3(input: Vector3 | number[]) {
+    if (Array.isArray(input)) {
+      input = new Vector3(input[0], input[1], input[2]);
+    }
 
     if (input.z === undefined)
       throw "Input to Perlin::get3() must be of type THREE.Vector3";
@@ -174,7 +139,7 @@ export class Perlin {
     cell.y &= 255;
     cell.z &= 255;
 
-    const gradiantDot = [];
+    const gradiantDot: number[] = [];
     for (let i = 0; i < 8; i++) {
       const s = this._offsetMatrix[i];
 

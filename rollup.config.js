@@ -1,37 +1,45 @@
-import glslify from "rollup-plugin-glslify";
-
-const glslOpts = {
-  // Default
-  include: ["**/*.vs", "**/*.fs", "**/*.vert", "**/*.frag", "**/*.glsl"],
-
-  // Undefined by default
-  exclude: "node_modules/**",
-
-  // Compress shader by default using logic from rollup-plugin-glsl
-  compress: false,
-};
+import typescript from "@rollup/plugin-typescript";
+import copy from "rollup-plugin-copy";
+import { uglify } from "rollup-plugin-uglify";
+import packageJson from "./package.json";
 
 export default [
   {
-    input: "index.js",
-    output: {
-      file: "build/three-noise.module.js",
-      format: "es",
-    },
-    external: ["three"],
-    plugins: [glslify(glslOpts)],
-  },
-  {
-    input: "index.js",
-    output: {
-      file: "build/three-noise.js",
-      format: "iife",
-      globals: {
-        three: "THREE",
+    input: "src/index.ts",
+    output: [
+      {
+        file: "dist/index.cjs",
+        format: "cjs",
+        sourcemap: true,
+        exports: "named",
+        name: packageJson.name,
       },
-      name: "THREE_Noise",
-    },
-    external: ["three"],
-    plugins: [glslify(glslOpts)],
+      {
+        file: "dist/index.js",
+        format: "es",
+        exports: "named",
+        sourcemap: true,
+        name: packageJson.name,
+      },
+    ],
+    plugins: [
+      typescript({
+        declaration: true,
+      }),
+      copy({
+        targets: [
+          {
+            src: "package.json",
+            dest: "dist",
+            transform: (contents) => {
+              const pkg = JSON.parse(contents.toString());
+              pkg.private = false;
+              return JSON.stringify(pkg, null, 2);
+            },
+          },
+        ],
+      }),
+      uglify(),
+    ],
   },
 ];
