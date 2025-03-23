@@ -5,7 +5,7 @@
   <p align="center">
     Simple CPU gradient noise library. Now with fBm!
     <br />
-    <a href="">View Demo</a>
+    <a href="https://farazzshaikh.github.io/ts-noise/">View Demo</a>
     ·
     <a href="https://github.com/FarazzShaikh/three-noise/issues/new">Report Bug</a>
     ·
