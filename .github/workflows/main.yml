@@ -21,6 +21,7 @@ jobs:
       - name: Install and Build
         run: |
           cd example
+          yarn removeLocalPackage
           yarn
           yarn add ts-noise
           yarn build
