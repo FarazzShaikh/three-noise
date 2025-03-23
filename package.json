@@ -1,6 +1,6 @@
 {
   "name": "ts-noise",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Simple gradient noise library for use with Three.js. Now with fBm!",
   "author": "Faraz Shaikh <farazzshaikh@gmail.com>",
   "license": "MIT",
