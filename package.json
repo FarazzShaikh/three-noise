@@ -4,8 +4,8 @@
   "description": "Simple gradient noise library for use with Three.js. Now with fBm!",
   "author": "Faraz Shaikh <farazzshaikh@gmail.com>",
   "license": "MIT",
-  "main": "index.js",
-  "module": "index.esm.js",
+  "main": "index.cjs",
+  "module": "index.js",
   "types": "types/index.d.ts",
   "private": true,
   "workspaces": [
