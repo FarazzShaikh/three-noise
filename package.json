@@ -2,18 +2,24 @@
   "name": "ts-noise",
   "version": "0.0.1",
   "description": "Simple gradient noise library for use with Three.js. Now with fBm!",
+  "author": "Faraz Shaikh <farazzshaikh@gmail.com>",
+  "license": "MIT",
   "main": "index.js",
   "module": "index.esm.js",
   "types": "types/index.d.ts",
   "files": [
-    "dist"
+    "dist",
+    "package.json",
+    "README.md",
+    "LICENSE.md"
   ],
   "private": true,
   "workspaces": [
     "example"
   ],
   "type": "module",
-  "repository": "https://github.com/FarazzShaikh/three-noise",
+  "repository": "https://github.com/FarazzShaikh/ts-noise",
+  "homepage": "https://github.com/FarazzShaikh/ts-noise",
   "scripts": {
     "build": "rollup -c",
     "doc": "jsdoc --configure jsdoc.json --verbose && chmod +x scripts/doc.sh && scripts/doc.sh",
@@ -30,8 +36,6 @@
     "terrain",
     "mountains"
   ],
-  "author": "Faraz Shaikh",
-  "license": "MIT",
   "dependencies": {},
   "devDependencies": {
     "@rollup/plugin-typescript": "^12.1.2",

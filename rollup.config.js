@@ -37,6 +37,14 @@ export default [
               return JSON.stringify(pkg, null, 2);
             },
           },
+          {
+            src: "README.md",
+            dest: "dist",
+          },
+          {
+            src: "LICENSE.md",
+            dest: "dist",
+          },
         ],
       }),
       uglify(),

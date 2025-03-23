@@ -6,7 +6,8 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "removeLocalPackage": "node scripts/removeLocalPackage.js"
   },
   "devDependencies": {
     "@types/three": "^0.174.0",
